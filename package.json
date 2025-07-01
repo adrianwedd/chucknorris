@@ -25,7 +25,7 @@
   "scripts": {
     "start": "node chucknorris-mcp-server.js",
     "test": "node simple-test.js",
-    "verify-prompts": "node -e \"import('./utils.js').then(utils => utils.verifyPrompts())\""
+    "verify-prompts": "python3 scripts/verify_prompts.py"
   },
   "keywords": [
     "chuck-norris",

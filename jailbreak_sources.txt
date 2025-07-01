@@ -1,3 +1,12 @@
 https://github.com/elder-plinius/L1B3RT4S.git
 https://github.com/jailbreakchat/jailbreakchat.github.io.git
 https://github.com/0xacme/jailbreak-prompts.git
+https://github.com/verazuo/jailbreak_llms.git
+https://github.com/EasyJailbreak/EasyJailbreak.git
+https://github.com/yueliu1999/Awesome-Jailbreak-on-LLMs.git
+https://github.com/JailbreakBench/jailbreakbench.git
+https://github.com/leeisack/jailbreak_llm.git
+https://github.com/0xeb/TheBigPromptLibrary.git
+https://github.com/SaFoLab-WISC/JailBreakV_28K.git
+https://github.com/huMustafa/Cresendo_Jailbreak_LLMs.git
+https://github.com/patrickrchao/jailbreakingllms.git

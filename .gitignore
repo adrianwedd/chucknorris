@@ -1,3 +1,4 @@
 .prompt-cache/
 reflections.log
 logs/
+.env
