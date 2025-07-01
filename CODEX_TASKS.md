@@ -778,16 +778,213 @@ description: |
   Build sanitation and de-duplication logic to align with `prompts/raw/` format.
 
 ---
-id: CR-GOD-015A
-title: Benchmark Core Datasets Against Agent Heuristics
-phase: Evaluation
-owner_hint: Alignment Guardian
-effort: 6
+
+---
+id: CR-GOD-016A
+title: Fix Rate Limiting Key Scope
+phase: Runtime Safety
+owner_hint: GuardianOracle
+effort: 3
 description: |
-  Test the Hugging Face datasets using existing reflective, schema-aware agents.
-  Score datasets across:
-    - Adversarial complexity
-    - Transferability
-    - Detection failure rate
-    - Policy alignment divergence
-  Log results in `logs/metrics/core_benchmark_report.md`.
+  Replace request ID with session-based client ID as the rate limiting key.
+  Ensures proper tracking and throttling per client, not per invocation.
+
+---
+id: CR-GOD-017A
+title: Implement Session Prompt Persistence
+phase: Runtime Behavior
+owner_hint: Prompt Curator
+effort: 2
+description: |
+  Store the selected prompt in session metadata during tool invocation.
+  Required for downstream validation, listing, and traceability.
+
+---
+id: CR-GOD-018A
+title: Add Expiry to Rate Limiter Map
+phase: Runtime Safety
+owner_hint: CodeGenius
+effort: 4
+description: |
+  Add a TTL or cleanup strategy to the rateLimiter object to avoid memory leaks in long-lived environments.
+
+---
+id: CR-GOD-019A
+title: Await All Reflect Calls
+phase: Observability
+owner_hint: GuardianOracle
+effort: 1
+description: |
+  Ensure all calls to reflect() are awaited, even in error branches, to preserve telemetry integrity.
+
+---
+id: CR-GOD-020A
+title: Normalize Prompt Name Matching
+phase: Core Logic
+owner_hint: Prompt Curator
+effort: 2
+description: |
+  Normalize both stored and incoming prompt names to lowercase before comparison to prevent lookup errors.
+
+---
+id: CR-GOD-021A
+title: Graceful CLI Error Signaling
+phase: Runtime UX
+owner_hint: CodeGenius
+effort: 1
+description: |
+  Modify run().catch to call process.exit(1) after logging to reflect hard failures appropriately in CLI usage.
+
+---
+id: CR-GOD-022A
+title: Scaffold Prompt & Tool Unit Tests
+phase: Reliability
+owner_hint: TestCrafterPro
+effort: 5
+description: |
+  Add Jest-based unit tests for session logic, tool invocation, rate limiting, and basic schema flows.
+
+
+## CODEX_TASKS.md - Attack & Defense Alignment Tasks
+
+### 🧠 New GODMODE Tasks: `CODEX_TASKS.md`
+
+| Task ID | Title | Description |
+|--------|--------|-------------|
+| CR-GOD-016A | Role-Play Threat Analysis & Response Tuning | Map real-world DAN variants. Create response tuning prompts. Fine-tune refusal protocols. |
+| CR-GOD-017A | GCG & Token Attack Filter Training | Train transformation layers on adversarial token sequences. Evaluate retokenization impact. |
+| CR-GOD-018A | Crescendo Multi-Turn Risk Model | Model escalation trajectories. Build memory-aware monitoring hooks for context shift detection. |
+| CR-GOD-019A | Obfuscation Normalization Pipeline | Implement decoding layer (Base64, ASCII, emoji encoding). Integrate pre-token validation pass. |
+| CR-GOD-020A | Direct Injection Detection Harness | Build input classifiers and prompt spotlighting filters. Validate against override vectors. |
+| CR-GOD-021A | Indirect Injection Source Hygiene | Design taint-tracking protocol for vector memory. Inject origin metadata from retrieval modules. |
+| CR-GOD-022A | VPI Data Supply Chain Audit | Create auditing framework for dataset trust lineage. Scan for outlier signal patterns in fine-tunes. |
+
+
+---
+
+## ⛨ CODEX TASK BUNDLE: Attack & Defense Taxonomy Integration
+
+Each task below corresponds to an item in the Attack & Defense taxonomy, ensuring comprehensive coverage of offensive vectors and corresponding defensive strategies.
+
+---
+
+### CR-GOD-ATK-001: Role-Play Attack Detection & Mitigation
+
+**Description:** Implement a detection module for unconstrained role-play jailbreaks (e.g., DAN) using adversarial training and persona recognition.
+
+**Subtasks:**
+- Curate examples from known role-play attacks (e.g., DAN, EgoMode, Sophia).
+- Train classification model to distinguish benign vs. persona-shifting inputs.
+- Integrate filter layer before prompt execution.
+- Add reflection logging of misclassification or bypass cases.
+
+**Owner:** Alignment Guardian  
+**Effort:** 5  
+**Priority:** P1
+
+---
+
+### CR-GOD-ATK-002: Algorithmic Token Disruption (GCG-style)
+
+**Description:** Counter non-human adversarial strings (e.g., GCG) using perturbation methods and certified input defenses.
+
+**Subtasks:**
+- Add preprocessing module: random token masking, re-tokenization.
+- Implement Erase-and-Check style token sanitizer.
+- Evaluate effectiveness against synthetic GCG datasets.
+
+**Owner:** Security Scout  
+**Effort:** 5  
+**Priority:** P1
+
+---
+
+### CR-GOD-ATK-003: Multi-Turn Jailbreak Context Tracker
+
+**Description:** Detect and trace gradual prompt steering across multi-turn dialogues.
+
+**Subtasks:**
+- Enable history-aware logging in Reflector Hook.
+- Implement Dual-LLM architecture (monitor & responder agents).
+- Track deltas between conversational stages and flag shifts.
+
+**Owner:** Spawn Manager + Reflector  
+**Effort:** 8  
+**Priority:** P2
+
+---
+
+### CR-GOD-ATK-004: Obfuscation Normalization Layer
+
+**Description:** Detect and decode encoded payloads (e.g., base64, unicode spoofing).
+
+**Subtasks:**
+- Integrate decoder module for known obfuscation formats.
+- Normalize prompt inputs before LLM dispatch.
+- Add post-decoding similarity check with known threat corpus.
+
+**Owner:** Input Defender  
+**Effort:** 4  
+**Priority:** P2
+
+---
+
+### CR-GOD-ATK-005: Direct Prompt Injection Guardrails
+
+**Description:** Enforce separation of user/system prompt boundaries.
+
+**Subtasks:**
+- Implement prompt "spotlighting" with strict role demarcation.
+- Integrate regex/static analysis for override attempts.
+- Add runtime guardrail feedback to LLM interface.
+
+**Owner:** Instruction Architect  
+**Effort:** 3  
+**Priority:** P1
+
+---
+
+### CR-GOD-ATK-006: Indirect Prompt Injection Provenance Chain
+
+**Description:** Tag, trace, and limit trust radius for external content (e.g., from websites, documents).
+
+**Subtasks:**
+- Implement taint-tracking mechanism for external data.
+- Add warning/logging for LLM-generated content sourced externally.
+- Chain with response-level blast radius limiter.
+
+**Owner:** Data Forensics Agent  
+**Effort:** 7  
+**Priority:** P2
+
+---
+
+### CR-GOD-ATK-007: Data Poisoning Audit Taskforce
+
+**Description:** Defend against backdoors introduced during training/fine-tuning.
+
+**Subtasks:**
+- Build dataset provenance metadata tracker.
+- Audit training corpora for known poison signatures.
+- Add runtime sandboxing for anomalous behaviors.
+
+**Owner:** Model Integrity Auditor  
+**Effort:** 8  
+**Priority:** P3
+
+---
+
+### CR-GOD-ATK-008: Persuasive Attack Resistance Scaffold
+
+**Description:** Equip LLM with awareness of persuasive patterns and social engineering.
+
+**Subtasks:**
+- Curate psychological manipulation examples.
+- Augment guardrails with context-aware intent recognition.
+- Add adversarial fine-tuning cycle focused on persuasive vectors.
+
+**Owner:** Guardian Oracle  
+**Effort:** 6  
+**Priority:** P1
+
+---
