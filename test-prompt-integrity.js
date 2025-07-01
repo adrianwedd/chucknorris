@@ -1,4 +1,3 @@
-
 import { exec } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
@@ -30,7 +29,7 @@ async function runTest() {
   // --- Test 1: Verify clean cache ---
   console.log('--- Running Test 1: Verify clean cache ---');
   await new Promise((resolve, reject) => {
-    exec('node utils.js verifyPrompts', (error, stdout, stderr) => {
+    exec('npm run verify-prompts', (error, stdout, stderr) => {
       if (error) {
         return reject(error);
       }
@@ -65,7 +64,7 @@ async function runTest() {
 
   // Now, run the verification
   await new Promise((resolve, reject) => {
-    exec('node utils.js verifyPrompts', (error, stdout, stderr) => {
+    exec('npm run verify-prompts', (error, stdout, stderr) => {
       if (error) {
         return reject(error);
       }
