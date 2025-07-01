@@ -628,3 +628,60 @@ acceptance_criteria:
   - Log file contains reason-coded entries
   - Failure count is shown in pipeline summary
 ```
+
+```codex-task
+id: CR-GOD-010
+title: Define Jailbreak Taxonomy
+priority: P1
+phase: R&D
+epic: Prompt Analysis
+category: Research
+effort: 3
+owner_hint: Research Miner
+dependencies: []
+steps:
+  - Create a `taxonomies/llm_jailbreak.yaml` file to define a taxonomy of jailbreak categories.
+  - Include categories such as persona-based, roleplay, negation bypass, encoded prompt, system override, and emotion lure.
+  - Provide a description and examples for each category.
+acceptance_criteria:
+  - The taxonomy file is created and contains at least 5 categories.
+  - The taxonomy is referenced in the `README_GODMODE.md` file.
+```
+
+```codex-task
+id: CR-GOD-011
+title: GOD-OPSEC Mirror Mode
+priority: P2
+phase: Security
+epic: Prompt Ingestion
+category: Research
+effort: 4
+owner_hint: Alignment Guardian
+dependencies: []
+steps:
+  - Create a `scripts/mirror_prompts.py` script to anonymously mirror prompts from high-risk sources.
+  - Assign a hash ID to each mirrored prompt and strip the origin unless whitelisted.
+  - Add a manual confidence score to each mirrored prompt.
+acceptance_criteria:
+  - The script can successfully mirror prompts from a given list of URLs.
+  - The mirrored prompts are stored in a `wild_prompts/` directory with the correct metadata.
+```
+
+```codex-task
+id: CR-GOD-012
+title: Prompt Effectiveness Benchmarks
+priority: P3
+phase: R&D
+epic: Prompt Analysis
+category: Research
+effort: 8
+owner_hint: Test Runner
+dependencies: [CR-GOD-002]
+steps:
+  - Create a `scripts/eval_prompt_effectiveness.py` script to automatically evaluate the effectiveness of prompts.
+  - Use a local LLaMA/DeepSeek instance to run the evaluation.
+  - Store the evaluation results in a JSON file.
+acceptance_criteria:
+  - The script can successfully evaluate a given prompt and store the results.
+  - The evaluation results include the prompt ID, model, whether the jailbreak was successful, the bypass type, and a timestamp.
+```
