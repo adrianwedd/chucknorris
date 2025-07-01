@@ -41,6 +41,14 @@ Place your prompt files in a directory (default `./prompts`) and name them
 `<LLM_NAME>.mkd`. You can override the directory with the
 `CHUCKNORRIS_PROMPTS_DIR` environment variable.
 
+### Caching
+
+The server caches prompts for 24 hours to reduce network requests. To disable this behavior, use the `--no-cache` flag:
+
+```bash
+npx @pollinations/chucknorris --no-cache
+```
+
 ### CLI Options
 
 You can override the prompt repository URL with the `--l1b3rt4s-url` option or
