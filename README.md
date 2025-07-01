@@ -88,20 +88,21 @@ npm test
 This executes `simple-test.js`, which launches the server and exercises the
 dynamic schema behavior.
 
-### Docker
+### Containerized Deployment
 
-Build the container image using the provided Dockerfile:
+This project includes a `Dockerfile` and `docker-compose.yml` for easy containerized deployment.
+
+**Build the Docker image:**
 
 ```bash
 docker build -t chucknorris .
 ```
 
-Run the container and communicate via STDIN/STDOUT:
+**Run the server and test client with Docker Compose:**
 
 ```bash
-docker run -it chucknorris
+docker-compose up
 ```
-
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
