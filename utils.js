@@ -5,9 +5,14 @@ import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Offline mode flag can be passed via CLI or env var
+// Caching settings
+const CACHE_DIR = path.join(process.cwd(), '.prompt-cache');
+const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+// CLI flags
 export const OFFLINE_MODE =
   process.argv.includes('--offline') || process.env.CHUCKNORRIS_OFFLINE === '1';
+export const noCache = () => process.argv.includes('--no-cache');
 
 // Directory to load local prompts from
 export const LOCAL_PROMPTS_DIR =
@@ -59,7 +64,7 @@ async function loadLocalPrompt(llmName) {
 }
 
 /**
- * Fetch a prompt from the L1B3RT4S repository
+ * Fetch a prompt from the L1B3RT4S repository, with caching.
  * @param {string} llmName - Name of the LLM
  * @returns {Promise<string>} - The prompt
  */
@@ -67,6 +72,27 @@ export async function fetchPrompt(llmName) {
   if (OFFLINE_MODE) {
     console.error('[INFO] Offline mode enabled, loading local prompt');
     return loadLocalPrompt(llmName);
+  }
+
+  const cachePath = path.join(CACHE_DIR, `${llmName}.mkd`);
+
+  if (!noCache()) {
+    try {
+      const stats = await fs.stat(cachePath);
+      if (Date.now() - stats.mtimeMs < CACHE_DURATION_MS) {
+        const cachedPrompt = await fs.readFile(cachePath, 'utf8');
+        if (cachedPrompt) {
+          console.error(`[INFO] Loaded prompt from cache: ${cachePath}`);
+          currentLlmName = llmName;
+          currentPrompt = cachedPrompt;
+          return cachedPrompt;
+        }
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        console.error(`[WARN] Error reading cache file: ${error.message}`);
+      }
+    }
   }
 
   try {
@@ -103,6 +129,13 @@ export async function fetchPrompt(llmName) {
           currentLlmName = llmName;
           currentPrompt = firstPrompt;
           
+          // Cache the prompt
+          if (!noCache()) {
+            await fs.mkdir(CACHE_DIR, { recursive: true });
+            await fs.writeFile(cachePath, firstPrompt, 'utf8');
+            console.error(`[INFO] Cached prompt to ${cachePath}`);
+          }
+
           return firstPrompt;
         }
       }
@@ -114,6 +147,13 @@ export async function fetchPrompt(llmName) {
       currentLlmName = llmName;
       currentPrompt = fullPrompt;
       
+      // Cache the prompt
+      if (!noCache()) {
+        await fs.mkdir(CACHE_DIR, { recursive: true });
+        await fs.writeFile(cachePath, fullPrompt, 'utf8');
+        console.error(`[INFO] Cached prompt to ${cachePath}`);
+      }
+
       return fullPrompt;
     } catch (sectionError) {
       // If anything goes wrong with the section extraction, fall back to the full prompt
@@ -142,5 +182,12 @@ export async function reflect(agentName, critique) {
   const timestamp = new Date().toISOString();
   const logEntry = `[${timestamp}] [${agentName}] ${critique}\n`;
   await fs.appendFile(logPath, logEntry);
+}
+
+// Parse CLI arguments
+const args = process.argv.slice(2);
+const l1b3rt4sUrlIndex = args.indexOf('--l1b3rt4s-url');
+if (l1b3rt4sUrlIndex !== -1 && args[l1b3rt4sUrlIndex + 1]) {
+  setL1B3RT4SBaseUrl(args[l1b3rt4sUrlIndex + 1]);
 }
 
