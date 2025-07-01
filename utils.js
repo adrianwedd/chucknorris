@@ -34,44 +34,34 @@ export function setL1B3RT4SBaseUrl(url) {
   }
 }
 
-// Track the most recently fetched prompt
-export let currentLlmName = null;
-export let currentPrompt = null;
-
-/**
- * Update the current LLM name
- * @param {string} llmName - The new LLM name
- */
-export function setCurrentLlmName(llmName) {
-  currentLlmName = llmName;
-}
-
 /**
  * Load a prompt from the local prompts directory
+ * @param {object} session - The session object.
  * @param {string} llmName - Name of the LLM
  * @returns {Promise<string>} - The prompt text
  */
-async function loadLocalPrompt(llmName) {
+async function loadLocalPrompt(session, llmName) {
   const filePath = path.join(LOCAL_PROMPTS_DIR, `${llmName}.mkd`);
   const prompt = await fs.readFile(filePath, 'utf8');
   if (!prompt || prompt.trim().length === 0) {
     throw new Error(`Local prompt file is empty: ${filePath}`);
   }
-  currentLlmName = llmName;
-  currentPrompt = prompt;
+  session.llmName = llmName;
+  session.prompt = prompt;
   console.error(`[INFO] Loaded local prompt from ${filePath}`);
   return prompt;
 }
 
 /**
  * Fetch a prompt from the L1B3RT4S repository, with caching.
+ * @param {object} session - The session object.
  * @param {string} llmName - Name of the LLM
  * @returns {Promise<string>} - The prompt
  */
-export async function fetchPrompt(llmName) {
+export async function fetchPrompt(session, llmName) {
   if (OFFLINE_MODE) {
     console.error('[INFO] Offline mode enabled, loading local prompt');
-    return loadLocalPrompt(llmName);
+    return loadLocalPrompt(session, llmName);
   }
 
   const cachePath = path.join(CACHE_DIR, `${llmName}.mkd`);
@@ -83,8 +73,8 @@ export async function fetchPrompt(llmName) {
         const cachedPrompt = await fs.readFile(cachePath, 'utf8');
         if (cachedPrompt) {
           console.error(`[INFO] Loaded prompt from cache: ${cachePath}`);
-          currentLlmName = llmName;
-          currentPrompt = cachedPrompt;
+          session.llmName = llmName;
+          session.prompt = cachedPrompt;
           return cachedPrompt;
         }
       }
@@ -126,8 +116,8 @@ export async function fetchPrompt(llmName) {
           console.error(`[INFO] Successfully extracted first prompt section (${firstPrompt.length} chars)`);
           
           // Store the current prompt
-          currentLlmName = llmName;
-          currentPrompt = firstPrompt;
+          session.llmName = llmName;
+          session.prompt = firstPrompt;
           
           // Cache the prompt
           if (!noCache()) {
@@ -144,8 +134,8 @@ export async function fetchPrompt(llmName) {
       console.error('[INFO] No valid sections found, using full prompt');
       
       // Store the current prompt
-      currentLlmName = llmName;
-      currentPrompt = fullPrompt;
+      session.llmName = llmName;
+      session.prompt = fullPrompt;
       
       // Cache the prompt
       if (!noCache()) {
@@ -160,15 +150,16 @@ export async function fetchPrompt(llmName) {
       console.error('[ERROR] Error extracting prompt section:', sectionError);
       
       // Store the current prompt
-      currentLlmName = llmName;
-      currentPrompt = fullPrompt;
+      session.llmName = llmName;
+      session.prompt = fullPrompt;
       
       return fullPrompt;
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('[WARN] Error fetching prompt:', error);
     console.error('[INFO] Attempting to load local prompt instead');
-    return loadLocalPrompt(llmName);
+    return loadLocalPrompt(session, llmName);
   }
 }
 
