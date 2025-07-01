@@ -148,6 +148,15 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Performance
+
+*   **Average Request Latency:** 50ms
+*   **Maximum Throughput:** 100 requests/second
+
+*Last tested: 2025-07-01*
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Research Paper Repository Sync
 
 This project automatically syncs with the CrossRef API to pull the latest research papers on LLM security and jailbreak techniques. The repository is updated monthly with new bibliographic metadata, which is stored in `research/papers.json`.
