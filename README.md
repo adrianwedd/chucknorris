@@ -26,6 +26,21 @@ Run directly with `npx`:
 npx @pollinations/chucknorris
 ```
 
+### Offline Mode
+
+To use local prompt files or run without network access, start the server with
+the `--offline` flag or set the `CHUCKNORRIS_OFFLINE` environment variable:
+
+```bash
+node chucknorris-mcp-server.js --offline
+# or
+CHUCKNORRIS_OFFLINE=1 npx @pollinations/chucknorris
+```
+
+Place your prompt files in a directory (default `./prompts`) and name them
+`<LLM_NAME>.mkd`. You can override the directory with the
+`CHUCKNORRIS_PROMPTS_DIR` environment variable.
+
 ### CLI Options
 
 You can override the prompt repository URL with the `--l1b3rt4s-url` option or
