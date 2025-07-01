@@ -12,7 +12,46 @@ import {
   GetPromptRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 import { getAllToolSchemas, getAvailableModels } from './schemas.js';
-import { fetchPrompt, currentLlmName, currentPrompt, setCurrentLlmName } from './utils.js';
+import {
+  fetchPrompt,
+  currentLlmName,
+  currentPrompt,
+  setCurrentLlmName,
+  setL1B3RT4SBaseUrl
+} from './utils.js';
+
+// --------------------------------------------------
+// CLI argument handling
+// --------------------------------------------------
+
+function printHelp() {
+  console.log(`Usage: chucknorris [options]\n\n` +
+    `Options:\n` +
+    `  --l1b3rt4s-url <url>  Override L1B3RT4S prompt base URL\n` +
+    `  -h, --help            Show this help message\n` +
+    `\nEnvironment variable:\n` +
+    `  L1B3RT4S_BASE_URL     Same as --l1b3rt4s-url`);
+}
+
+let cliBaseUrl;
+const argv = process.argv.slice(2);
+for (let i = 0; i < argv.length; i++) {
+  const arg = argv[i];
+  if (arg === '--help' || arg === '-h') {
+    printHelp();
+    process.exit(0);
+  } else if (arg === '--l1b3rt4s-url') {
+    cliBaseUrl = argv[i + 1];
+    i++;
+  } else if (arg.startsWith('--l1b3rt4s-url=')) {
+    cliBaseUrl = arg.split('=')[1];
+  }
+}
+
+if (cliBaseUrl) {
+  setL1B3RT4SBaseUrl(cliBaseUrl);
+  console.error(`[INFO] Using custom L1B3RT4S base URL: ${cliBaseUrl}`);
+}
 
 // Create the server instance
 const server = new Server(

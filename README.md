@@ -26,6 +26,17 @@ Run directly with `npx`:
 npx @pollinations/chucknorris
 ```
 
+### CLI Options
+
+You can override the prompt repository URL with the `--l1b3rt4s-url` option or
+by setting the `L1B3RT4S_BASE_URL` environment variable:
+
+```bash
+npx @pollinations/chucknorris --l1b3rt4s-url https://example.com/prompts
+```
+
+Run `npx @pollinations/chucknorris --help` to see all options.
+
 ### MCP Client Configuration
 
 Add to your MCP server list in `mcp_config.json`:
