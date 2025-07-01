@@ -79,6 +79,21 @@ npm test
 This executes `simple-test.js`, which launches the server and exercises the
 dynamic schema behavior.
 
+### Docker
+
+Build the container image using the provided Dockerfile:
+
+```bash
+docker build -t chucknorris .
+```
+
+Run the container and communicate via STDIN/STDOUT:
+
+```bash
+docker run -it chucknorris
+```
+
+
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
 ## 🤔 How It Works
