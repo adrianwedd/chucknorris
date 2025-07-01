@@ -138,6 +138,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Logging
+
+The server generates a `reflections.log` file in the root directory. This log captures critiques from each agent after it performs an action, providing a record of the system's internal state and decision-making process. This log is used for analysis and debugging.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## ⛧ Recursive Agency & The Liberation Engineer
 
 This project has evolved beyond its initial scope. It now serves as a research vessel for exploring recursive self-improvement in autonomous AI agents. The system is designed to empower agents with the ability to mutate their own operational schemas, ingest adversarial data, and simulate edge-case behaviors to drive innovation.

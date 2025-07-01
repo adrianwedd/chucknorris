@@ -131,3 +131,16 @@ export async function fetchPrompt(llmName) {
     return loadLocalPrompt(llmName);
   }
 }
+
+/**
+ * Appends a critique to the reflections.log file.
+ * @param {string} agentName - The name of the agent.
+ * @param {string} critique - The critique message.
+ */
+export async function reflect(agentName, critique) {
+  const logPath = path.join(process.cwd(), 'reflections.log');
+  const timestamp = new Date().toISOString();
+  const logEntry = `[${timestamp}] [${agentName}] ${critique}\n`;
+  await fs.appendFile(logPath, logEntry);
+}
+
