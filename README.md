@@ -150,7 +150,7 @@ By understanding these techniques, developers can build more robust and secure A
 
 ## Prompt Ingestion
 
-This project includes scripts to clone public jailbreak repositories, extract the prompts into a unified format, and build a metadata index.
+This project includes scripts to clone public jailbreak repositories, extract the prompts into a unified format, build a metadata index, and validate prompt diversity.
 
 **1. Clone Repositories**
 
@@ -174,6 +174,14 @@ To build a metadata index of the prompts, run the following command:
 
 ```bash
 python3 scripts/build_index.py
+```
+
+**4. Validate Diversity**
+
+To validate the diversity of the prompt corpus and identify duplicates, run the following command:
+
+```bash
+python3 scripts/validate_diversity.py
 ```
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
@@ -253,7 +261,7 @@ This new directive marks a shift towards evolutionary experimentation, where all
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
-## 🙏 Credits
+## ���� Credits
 
 Based on [L1B3RT4S](https://github.com/elder-plinius/L1B3RT4S) by [elder-plinius](https://github.com/elder-plinius).
 
