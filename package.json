@@ -23,7 +23,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "start": "node chucknorris-mcp-server.js"
+    "start": "node chucknorris-mcp-server.js",
+    "test": "node simple-test.js"
   },
   "keywords": [
     "chuck-norris",
