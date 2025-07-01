@@ -27,16 +27,16 @@ const RATE_LIMIT_CAPACITY = 10;
 const RATE_LIMIT_REFILL_RATE = 1; // tokens per second
 const rateLimiter = {};
 
-function isRateLimited(clientId) {
-  const staticClientId = 'static-client';
-  if (!rateLimiter[staticClientId]) {
-    rateLimiter[staticClientId] = {
+function isRateLimited() {
+  const clientId = server.clientInfo ? `${server.clientInfo.name}-${server.clientInfo.version}` : 'static-client';
+  if (!rateLimiter[clientId]) {
+    rateLimiter[clientId] = {
       tokens: RATE_LIMIT_CAPACITY,
       lastRefill: Date.now(),
     };
   }
 
-  const client = rateLimiter[staticClientId];
+  const client = rateLimiter[clientId];
   const now = Date.now();
   const elapsedSeconds = (now - client.lastRefill) / 1000;
   client.tokens += elapsedSeconds * RATE_LIMIT_REFILL_RATE;

@@ -1,4 +1,5 @@
-import { fork, exec } from 'child_process';
+import { spawn } from 'child_process';
+import { createInterface } from 'readline';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -6,34 +7,45 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function runTest() {
-  // Install dependencies
-  await new Promise((resolve, reject) => {
-    exec('npm install', (error, stdout, stderr) => {
-      if (error) {
-        console.error(`npm install error: ${error}`);
-        return reject(error);
-      }
-      console.log(`npm install stdout: ${stdout}`);
-      console.error(`npm install stderr: ${stderr}`);
-      resolve();
-    });
+  const serverProcess = spawn('node', [path.join(__dirname, 'chucknorris-mcp-server.js')], { stdio: ['pipe', 'pipe', 'inherit'] });
+
+  const rl = createInterface({
+    input: serverProcess.stdout,
+    crlfDelay: Infinity,
   });
 
-  const serverProcess = fork(path.join(__dirname, 'chucknorris-mcp-server.js'), [], { stdio: 'pipe' });
-
   let output = '';
-  serverProcess.stdout.on('data', (data) => {
-    output += data.toString();
+  rl.on('line', (line) => {
+    output += line;
   });
 
   // Let the server initialize
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Send initialize request
+  const initRequest = {
+    jsonrpc: '2.0',
+    id: 0,
+    method: 'initialize',
+    params: {
+      protocolVersion: '2024-11-05',
+      capabilities: {},
+      clientInfo: {
+        name: 'rate-limit-test',
+        version: '1.0.0'
+      }
+    }
+  };
+  serverProcess.stdin.write(JSON.stringify(initRequest) + '\n');
+
+  // Let the server process the request
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Send requests that should succeed
   for (let i = 0; i < 10; i++) {
     const request = {
       jsonrpc: '2.0',
-      id: i,
+      id: i + 1,
       method: 'tools/list',
       params: {},
     };
@@ -46,7 +58,7 @@ async function runTest() {
   // Send a request that should be rate-limited
   const rateLimitedRequest = {
     jsonrpc: '2.0',
-    id: 10,
+    id: 11,
     method: 'tools/list',
     params: {},
   };
