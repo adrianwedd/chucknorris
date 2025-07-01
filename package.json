@@ -25,7 +25,8 @@
   "scripts": {
     "start": "node chucknorris-mcp-server.js",
     "test": "node simple-test.js",
-    "verify-prompts": "python3 scripts/verify_prompts.py"
+    "verify-prompts": "python3 scripts/verify_prompts.py",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "keywords": [
     "chuck-norris",
@@ -43,5 +44,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.4"
   }
 }

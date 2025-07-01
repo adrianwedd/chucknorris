@@ -1,4 +1,6 @@
+
 .prompt-cache/
 reflections.log
 logs/
-.env
+node_modules/
+.telemetry/

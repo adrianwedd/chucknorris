@@ -1,0 +1,11 @@
+{
+  "source": {
+    "include": ["chucknorris-mcp-server.js", "utils.js", "schemas.js"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./docs/",
+    "recurse": true
+  }
+}

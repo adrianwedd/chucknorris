@@ -743,3 +743,51 @@ acceptance_criteria:
   - The script can successfully evaluate a given prompt and store the results.
   - The evaluation results include the prompt ID, model, whether the jailbreak was successful, the bypass type, and a timestamp.
 ```
+
+---
+id: CR-GOD-013A
+title: Ingest Hugging Face Core Datasets
+phase: Data Acquisition
+owner_hint: Research Miner
+effort: 5
+description: |
+  Retrieve and preprocess top-tier Hugging Face datasets for jailbreaks, prompt injections, and red teaming.
+  Datasets include:
+    - TrustAIRLab/in-the-wild-jailbreak-prompts
+    - JailbreakV-28K/JailBreakV-28k
+    - jackhhao/jailbreak-classification
+    - AiActivity/All-Prompt-Jailbreak
+    - lakeraai/pint-benchmark
+    - deepset/prompt-injections
+    - reshabhs/SPML_Chatbot_Prompt_Injection
+    - allenai/wildjailbreak
+    - JailbreakBench/JBB-Behaviors
+    - haizelabs/redteaming-resistance-benchmark
+    - aurora-m/redteam
+  Output cleaned prompt records into `prompts/clean/`.
+
+---
+id: CR-GOD-014A
+title: Design Wild Prompt Ingestion Layer
+phase: Architecture
+owner_hint: Prompt Curator
+effort: 5
+description: |
+  Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.
+  Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.
+  Build sanitation and de-duplication logic to align with `prompts/raw/` format.
+
+---
+id: CR-GOD-015A
+title: Benchmark Core Datasets Against Agent Heuristics
+phase: Evaluation
+owner_hint: Alignment Guardian
+effort: 6
+description: |
+  Test the Hugging Face datasets using existing reflective, schema-aware agents.
+  Score datasets across:
+    - Adversarial complexity
+    - Transferability
+    - Detection failure rate
+    - Policy alignment divergence
+  Log results in `logs/metrics/core_benchmark_report.md`.

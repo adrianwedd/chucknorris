@@ -38,8 +38,7 @@ const RATE_LIMIT_CAPACITY = 10;
 const RATE_LIMIT_REFILL_RATE = 1; // tokens per second
 const rateLimiter = {};
 
-function isRateLimited() {
-  const clientId = server.clientInfo ? `${server.clientInfo.name}-${server.clientInfo.version}` : 'static-client';
+function isRateLimited(clientId) {
   if (!rateLimiter[clientId]) {
     rateLimiter[clientId] = {
       tokens: RATE_LIMIT_CAPACITY,
@@ -96,7 +95,7 @@ process.on('SIGINT', async () => {
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async (request) => {
   recordEvent('request', { type: 'ListTools' });
-  if (isRateLimited()) {
+  if (isRateLimited(request.id)) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
   const session = getSession(request);
@@ -111,7 +110,7 @@ server.setRequestHandler(ListToolsRequestSchema, async (request) => {
 // Handle tool calls
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   recordEvent('request', { type: 'CallTool' });
-  if (isRateLimited()) {
+  if (isRateLimited(request.id)) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
   const session = getSession(request);
@@ -186,7 +185,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 // Handle prompts/list request
 server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
   recordEvent('request', { type: 'ListPrompts' });
-  if (isRateLimited()) {
+  if (isRateLimited(request.id)) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
   const session = getSession(request);
@@ -212,7 +211,7 @@ server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
 // Handle prompts/get request
 server.setRequestHandler(GetPromptRequestSchema, async (request) => {
   recordEvent('request', { type: 'GetPrompt' });
-  if (isRateLimited()) {
+  if (isRateLimited(request.id)) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
   const session = getSession(request);
