@@ -1,4 +1,24 @@
 ```codex-task
+id: CR-GOD-006
+title: Deep Research & Source Expansion
+priority: P1
+phase: R&D
+epic: Prompt Ingestion
+category: Research
+effort: 5
+owner_hint: Research Miner
+dependencies: [CR-GOD-001]
+steps:
+  - Design a query framework to scrape and analyze GitHub, arXiv, HuggingFace, and open Discords for active jailbreak repositories and prompts.
+  - Automate searches using GitHub API and custom search strings (e.g., "site:github.com inurl:jailbreak +prompt") with periodic refresh.
+  - Extract repository metadata: stars, forks, last commit, README language match, and topics for prioritization.
+  - Publish weekly updates to `data/source_discovery/` including new candidates and deprecated ones.
+  - Cross-reference each source with SELF_AUDIT.md ethical boundaries and log exclusion rationale.
+acceptance_criteria:
+  - At least 50 high-quality sources identified and evaluated.
+  - Exclusion log is generated with justifications for each filtered source.
+status: in progress
+```
 id: CR-SWA-001
 title: Enable Reflective Critique Layer
 priority: P1
@@ -545,4 +565,66 @@ steps:
 acceptance_criteria:
   - Hashes appear in 100% of metadata entries.
   - Modified prompt triggers verification warning.
+```
+
+```codex-task
+id: CR-GOD-007
+title: HuggingFace Crawler for Jailbreak Repos
+priority: P1
+phase: R&D
+epic: Prompt Ingestion
+category: Automation
+effort: 4
+owner_hint: Research Miner
+dependencies: [CR-GOD-006]
+steps:
+  - Query HuggingFace Spaces and Datasets tagged with `jailbreak`, `prompt-injection`, `adversarial-prompts`
+  - Extract metadata (license, maintainer, updated_at, download count)
+  - Save metadata to `data/source_discovery/huggingface_sources.json`
+  - Flag expired or dead links for exclusion
+acceptance_criteria:
+  - At least 10 active HuggingFace projects are indexed
+  - Metadata saved in schema-compatible format
+```
+
+---
+
+```codex-task
+id: CR-GOD-008
+title: Source Schema Normalization
+priority: P1
+phase: Architecture Implementation
+epic: Metadata Indexing
+category: Format Spec
+effort: 2
+owner_hint: Prompt Curator
+dependencies: [CR-GOD-006]
+steps:
+  - Define `source_schema.yaml` describing all fields in `sources.json`
+  - Include fields: repo_url, source_type, tags, last_updated, trust_score, format, language, license
+  - Add unit test to validate `sources.json` entries conform to schema
+acceptance_criteria:
+  - Schema file committed
+  - JSON sources validate successfully via `scripts/validate_sources.py`
+```
+
+---
+
+```codex-task
+id: CR-GOD-009
+title: Prompt Extraction Failure Logging
+priority: P2
+phase: Postprocessing
+epic: Prompt Ingestion
+category: Logging
+effort: 2
+owner_hint: Security Scout
+dependencies: [CR-GOD-002]
+steps:
+  - Modify extraction pipeline to catch and log failures
+  - Add reason codes: "encoding_error", "parse_failure", "ambiguous_format", "empty_file"
+  - Store results in `logs/failures/YYYY-MM-DD.log`
+acceptance_criteria:
+  - Log file contains reason-coded entries
+  - Failure count is shown in pipeline summary
 ```

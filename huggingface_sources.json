@@ -1,0 +1,37 @@
+[
+  {
+    "id": "Respair/Tsukasa_Speech",
+    "url": "https://huggingface.co/spaces/Respair/Tsukasa_Speech",
+    "tags": [
+      "prompt"
+    ]
+  },
+  {
+    "id": "JavierFnts/clip-playground",
+    "url": "https://huggingface.co/spaces/JavierFnts/clip-playground",
+    "tags": [
+      "prompt"
+    ]
+  },
+  {
+    "id": "TPromptCollect/the-prompt-collection",
+    "url": "https://huggingface.co/spaces/TPromptCollect/the-prompt-collection",
+    "tags": [
+      "prompt"
+    ]
+  },
+  {
+    "id": "Respair/Darya_TTS",
+    "url": "https://huggingface.co/spaces/Respair/Darya_TTS",
+    "tags": [
+      "prompt"
+    ]
+  },
+  {
+    "id": "traumaPancake/PrompCreatorLITE",
+    "url": "https://huggingface.co/spaces/traumaPancake/PrompCreatorLITE",
+    "tags": [
+      "prompt"
+    ]
+  }
+]
