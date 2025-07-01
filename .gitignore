@@ -1,2 +1,5 @@
 .prompt-cache/
 reflections.log
+
+#Secrets
+.env

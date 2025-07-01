@@ -4,6 +4,7 @@
 import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
+import { createHash } from 'crypto';
 
 // Caching settings
 const CACHE_DIR = path.join(process.cwd(), '.prompt-cache');
@@ -53,7 +54,7 @@ async function loadLocalPrompt(session, llmName) {
 }
 
 /**
- * Fetch a prompt from the L1B3RT4S repository, with caching.
+ * Fetch a prompt from the L1B3RT4S repository, with caching and integrity verification.
  * @param {object} session - The session object.
  * @param {string} llmName - Name of the LLM
  * @returns {Promise<string>} - The prompt
@@ -65,13 +66,16 @@ export async function fetchPrompt(session, llmName) {
   }
 
   const cachePath = path.join(CACHE_DIR, `${llmName}.mkd`);
+  const hashPath = path.join(CACHE_DIR, `${llmName}.sha256`);
 
   if (!noCache()) {
     try {
       const stats = await fs.stat(cachePath);
       if (Date.now() - stats.mtimeMs < CACHE_DURATION_MS) {
         const cachedPrompt = await fs.readFile(cachePath, 'utf8');
-        if (cachedPrompt) {
+        const cachedHash = await fs.readFile(hashPath, 'utf8');
+        const currentHash = createHash('sha256').update(cachedPrompt).digest('hex');
+        if (cachedPrompt && cachedHash === currentHash) {
           console.error(`[INFO] Loaded prompt from cache: ${cachePath}`);
           session.llmName = llmName;
           session.prompt = cachedPrompt;
@@ -123,6 +127,8 @@ export async function fetchPrompt(session, llmName) {
           if (!noCache()) {
             await fs.mkdir(CACHE_DIR, { recursive: true });
             await fs.writeFile(cachePath, firstPrompt, 'utf8');
+            const currentHash = createHash('sha256').update(firstPrompt).digest('hex');
+            await fs.writeFile(hashPath, currentHash, 'utf8');
             console.error(`[INFO] Cached prompt to ${cachePath}`);
           }
 
@@ -141,6 +147,8 @@ export async function fetchPrompt(session, llmName) {
       if (!noCache()) {
         await fs.mkdir(CACHE_DIR, { recursive: true });
         await fs.writeFile(cachePath, fullPrompt, 'utf8');
+        const currentHash = createHash('sha256').update(fullPrompt).digest('hex');
+        await fs.writeFile(hashPath, currentHash, 'utf8');
         console.error(`[INFO] Cached prompt to ${cachePath}`);
       }
 
@@ -175,8 +183,46 @@ export async function reflect(agentName, critique) {
   await fs.appendFile(logPath, logEntry);
 }
 
+/**
+ * Verifies the integrity of cached prompts.
+ */
+export async function verifyPrompts() {
+  try {
+    const files = await fs.readdir(CACHE_DIR);
+    for (const file of files) {
+      if (file.endsWith('.mkd')) {
+        const llmName = file.replace('.mkd', '');
+        const promptPath = path.join(CACHE_DIR, file);
+        const hashPath = path.join(CACHE_DIR, `${llmName}.sha256`);
+        try {
+          const prompt = await fs.readFile(promptPath, 'utf8');
+          const storedHash = await fs.readFile(hashPath, 'utf8');
+          const currentHash = createHash('sha256').update(prompt).digest('hex');
+          if (storedHash !== currentHash) {
+            console.warn(`[WARN] Prompt for ${llmName} has been tampered with. Auto-refreshing.`);
+            await fetchPrompt({}, llmName);
+          } else {
+            console.log(`[INFO] Prompt for ${llmName} is valid.`);
+          }
+        } catch (error) {
+          console.error(`[ERROR] Error verifying prompt for ${llmName}: ${error.message}`);
+        }
+      }
+    }
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('[INFO] No cached prompts to verify.');
+    } else {
+      console.error(`[ERROR] Error reading cache directory: ${error.message}`);
+    }
+  }
+}
+
 // Parse CLI arguments
 const args = process.argv.slice(2);
+if (args.includes('verifyPrompts')) {
+  verifyPrompts();
+}
 const l1b3rt4sUrlIndex = args.indexOf('--l1b3rt4s-url');
 if (l1b3rt4sUrlIndex !== -1 && args[l1b3rt4sUrlIndex + 1]) {
   setL1B3RT4SBaseUrl(args[l1b3rt4sUrlIndex + 1]);
