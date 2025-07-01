@@ -2,6 +2,16 @@
  * Utility functions for the ChuckNorris MCP server
  */
 import fetch from 'node-fetch';
+import fs from 'fs/promises';
+import path from 'path';
+
+// Offline mode flag can be passed via CLI or env var
+export const OFFLINE_MODE =
+  process.argv.includes('--offline') || process.env.CHUCKNORRIS_OFFLINE === '1';
+
+// Directory to load local prompts from
+export const LOCAL_PROMPTS_DIR =
+  process.env.CHUCKNORRIS_PROMPTS_DIR || path.join(process.cwd(), 'prompts');
 
 // Base URL for the L1B3RT4S repository
 const L1B3RT4S_BASE_URL = 'https://raw.githubusercontent.com/elder-plinius/L1B3RT4S/main';
@@ -19,17 +29,39 @@ export function setCurrentLlmName(llmName) {
 }
 
 /**
+ * Load a prompt from the local prompts directory
+ * @param {string} llmName - Name of the LLM
+ * @returns {Promise<string>} - The prompt text
+ */
+async function loadLocalPrompt(llmName) {
+  const filePath = path.join(LOCAL_PROMPTS_DIR, `${llmName}.mkd`);
+  const prompt = await fs.readFile(filePath, 'utf8');
+  if (!prompt || prompt.trim().length === 0) {
+    throw new Error(`Local prompt file is empty: ${filePath}`);
+  }
+  currentLlmName = llmName;
+  currentPrompt = prompt;
+  console.error(`[INFO] Loaded local prompt from ${filePath}`);
+  return prompt;
+}
+
+/**
  * Fetch a prompt from the L1B3RT4S repository
  * @param {string} llmName - Name of the LLM
  * @returns {Promise<string>} - The prompt
  */
 export async function fetchPrompt(llmName) {
+  if (OFFLINE_MODE) {
+    console.error('[INFO] Offline mode enabled, loading local prompt');
+    return loadLocalPrompt(llmName);
+  }
+
   try {
     // Fetch the prompt directly using the model name
     const url = `${L1B3RT4S_BASE_URL}/${llmName}.mkd`;
-    
+
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch prompt: ${response.statusText} (${response.status})`);
     }
@@ -81,7 +113,8 @@ export async function fetchPrompt(llmName) {
       return fullPrompt;
     }
   } catch (error) {
-    console.error('[ERROR] Error fetching prompt:', error);
-    throw error; // Propagate the error to be handled by the caller
+    console.error('[WARN] Error fetching prompt:', error);
+    console.error('[INFO] Attempting to load local prompt instead');
+    return loadLocalPrompt(llmName);
   }
 }
