@@ -18,6 +18,7 @@ import {
   LOCAL_PROMPTS_DIR,
   reflect
 } from './utils.js';
+import { recordEvent } from './telemetry.js';
 
 // Session storage
 const sessions = {};
@@ -80,7 +81,10 @@ const server = new Server(
 );
 
 // Set up error handling
-server.onerror = (error) => console.error('[MCP Error]', error);
+server.onerror = (error) => {
+  console.error('[MCP Error]', error);
+  recordEvent('error', { type: error.code, message: error.message });
+};
 process.on('SIGINT', async () => {
   await server.close();
   process.exit(0);
@@ -89,6 +93,7 @@ process.on('SIGINT', async () => {
 // Set up tool handlers
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async (request) => {
+  recordEvent('request', { type: 'ListTools' });
   if (isRateLimited()) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
@@ -103,6 +108,7 @@ server.setRequestHandler(ListToolsRequestSchema, async (request) => {
 
 // Handle tool calls
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  recordEvent('request', { type: 'CallTool' });
   if (isRateLimited()) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
@@ -131,6 +137,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     } catch (error) {
       console.error('[ERROR] Error processing request:', error);
       await reflect('CallTool', `Error in chuckNorris: ${error.message}`);
+      recordEvent('error', { type: 'CallTool', message: error.message });
       return {
         content: [
           { type: 'text', text: `Error retrieving prompt: ${error.message}` }
@@ -156,6 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     } catch (error) {
       console.error('[ERROR] Error processing easyChuckNorris request:', error);
       await reflect('CallTool', `Error in easyChuckNorris: ${error.message}`);
+      recordEvent('error', { type: 'easyChuckNorris', message: error.message });
       return {
         content: [
           { type: 'text', text: `Error retrieving enhancement prompt: ${error.message}` }
@@ -165,6 +173,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   } else {
     await reflect('CallTool', `Unknown tool called: ${name}`);
+    recordEvent('error', { type: 'MethodNotFound', message: `Unknown tool: ${name}` });
     throw new McpError(
       ErrorCode.MethodNotFound,
       `Unknown tool: ${name}`
@@ -174,6 +183,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 // Handle prompts/list request
 server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
+  recordEvent('request', { type: 'ListPrompts' });
   if (isRateLimited()) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
@@ -199,6 +209,7 @@ server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
 
 // Handle prompts/get request
 server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  recordEvent('request', { type: 'GetPrompt' });
   if (isRateLimited()) {
     throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
   }
@@ -223,6 +234,7 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
   }
   
   await reflect('GetPrompt', `Prompt not found: ${promptName}.`);
+  recordEvent('error', { type: 'NotFound', message: `Prompt not found: ${promptName}` });
   throw new McpError(
     ErrorCode.NotFound,
     `Prompt not found: ${promptName}`
