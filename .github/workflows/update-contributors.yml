@@ -1,0 +1,20 @@
+name: Update Contributors
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update contributors
+        uses: akhilmhdh/contributors-readme-action@v2.3.4
+        with:
+          repo_name: 'pollinations/chucknorris'
+          committer_username: 'pollinations-bot'
+          committer_email: 'bot@pollinations.ai'
+          commit_message: 'docs: update contributors'
+          readme_path: 'CONTRIBUTORS.md'

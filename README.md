@@ -148,6 +148,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Contributors
+
+This project exists thanks to all the people who contribute. Please see our [Contributors](CONTRIBUTORS.md) file for a list of contributors.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Historical Reflection Archive
 
 This project automatically archives reflection logs on a monthly basis. The archives are stored in the `reflections-archive` directory.
