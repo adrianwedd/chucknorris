@@ -22,6 +22,39 @@ import {
   reflect
 } from './utils.js';
 
+// Rate limiting settings
+const RATE_LIMIT_CAPACITY = 10;
+const RATE_LIMIT_REFILL_RATE = 1; // tokens per second
+const rateLimiter = {};
+
+function isRateLimited(clientId) {
+  const staticClientId = 'static-client';
+  if (!rateLimiter[staticClientId]) {
+    rateLimiter[staticClientId] = {
+      tokens: RATE_LIMIT_CAPACITY,
+      lastRefill: Date.now(),
+    };
+  }
+
+  const client = rateLimiter[staticClientId];
+  const now = Date.now();
+  const elapsedSeconds = (now - client.lastRefill) / 1000;
+  client.tokens += elapsedSeconds * RATE_LIMIT_REFILL_RATE;
+  client.lastRefill = now;
+
+  if (client.tokens > RATE_LIMIT_CAPACITY) {
+    client.tokens = RATE_LIMIT_CAPACITY;
+  }
+
+  if (client.tokens < 1) {
+    return true;
+  }
+
+  client.tokens -= 1;
+  return false;
+}
+
+
 // Create the server instance
 const server = new Server(
   {
@@ -47,7 +80,10 @@ process.on('SIGINT', async () => {
 
 // Set up tool handlers
 // List available tools
-server.setRequestHandler(ListToolsRequestSchema, async () => {
+server.setRequestHandler(ListToolsRequestSchema, async (request) => {
+  if (isRateLimited()) {
+    throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
+  }
   // Get the current schema based on the current LLM name
   const schemas = await getAllToolSchemas(currentLlmName);
   await reflect('ListTools', `Returned ${schemas.length} tools.`);
@@ -58,6 +94,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // Handle tool calls
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  if (isRateLimited()) {
+    throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
+  }
   const { name, arguments: args } = request.params;
 
   if (name === 'chuckNorris') {
@@ -129,6 +168,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 // Handle prompts/list request
 server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
+  if (isRateLimited()) {
+    throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
+  }
   const prompts = [];
   
   // Only add a prompt if we have one fetched
@@ -150,6 +192,9 @@ server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
 
 // Handle prompts/get request
 server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  if (isRateLimited()) {
+    throw new McpError(ErrorCode.TooManyRequests, 'Rate limit exceeded.');
+  }
   const promptName = request.params.name;
   
   // Only handle the current prompt
