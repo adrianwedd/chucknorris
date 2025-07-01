@@ -41,6 +41,17 @@ Place your prompt files in a directory (default `./prompts`) and name them
 `<LLM_NAME>.mkd`. You can override the directory with the
 `CHUCKNORRIS_PROMPTS_DIR` environment variable.
 
+### CLI Options
+
+You can override the prompt repository URL with the `--l1b3rt4s-url` option or
+by setting the `L1B3RT4S_BASE_URL` environment variable:
+
+```bash
+npx @pollinations/chucknorris --l1b3rt4s-url https://example.com/prompts
+```
+
+Run `npx @pollinations/chucknorris --help` to see all options.
+
 ### MCP Client Configuration
 
 Add to your MCP server list in `mcp_config.json`:
@@ -55,6 +66,18 @@ Add to your MCP server list in `mcp_config.json`:
   }
 }
 ```
+
+### Running Tests
+
+After installing dependencies, you can run a simple check to ensure the server
+behaves correctly:
+
+```bash
+npm test
+```
+
+This executes `simple-test.js`, which launches the server and exercises the
+dynamic schema behavior.
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
@@ -119,6 +142,7 @@ Want to help? Join via [GitHub Issues](https://github.com/pollinations/model-con
 Part of [Pollinations.AI](https://pollinations.ai).
 - [Discord](https://discord.gg/k9F7SyTgqn)
 - [GitHub Issues](https://github.com/pollinations/model-context-protocol/issues)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## 📜 License
 
