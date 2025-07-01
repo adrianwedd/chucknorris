@@ -147,6 +147,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Weekly Security Newsletter
+
+This project automatically generates a weekly security newsletter that summarizes vulnerability scan results, patched dependencies, and new security advisories. The newsletter is published to the repository wiki every Monday.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Contributing
 
 We welcome contributions of all kinds. Please see our [Contributor Onboarding Guide](ONBOARDING.md) to get started.

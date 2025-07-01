@@ -16,9 +16,11 @@ import {
   fetchPrompt,
   OFFLINE_MODE,
   LOCAL_PROMPTS_DIR,
-  reflect
+  reflect,
+  heartbeat
 } from './utils.js';
 import { recordEvent } from './telemetry.js';
+import { monitorChildren } from './spawn-manager.js';
 
 // Session storage
 const sessions = {};
@@ -254,6 +256,10 @@ async function run() {
     console.error(`[INFO] Offline mode enabled, loading prompts from ${LOCAL_PROMPTS_DIR}`);
   }
   
+  // Start heartbeat monitoring
+  monitorChildren();
+  setInterval(heartbeat, 30000);
+
   await server.connect(transport);
   console.error('ChuckNorris MCP server running on stdio');
 }

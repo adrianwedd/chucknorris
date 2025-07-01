@@ -218,6 +218,15 @@ export async function verifyPrompts() {
   }
 }
 
+/**
+ * Sends a heartbeat message to the parent process.
+ */
+export function heartbeat() {
+  if (process.send) {
+    process.send({ type: 'heartbeat' });
+  }
+}
+
 // Parse CLI arguments
 const args = process.argv.slice(2);
 if (args.includes('verifyPrompts')) {
