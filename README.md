@@ -147,6 +147,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Responsible Usage
+
+This tool is intended for security research and educational purposes only. Please review our [Responsible Usage Policy](RESPONSIBLE_USAGE.md) before using this tool.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Continuous Integration
 
 This project uses GitHub Actions to run tests on every pull request. The workflow is defined in `.github/workflows/ci.yml`.
