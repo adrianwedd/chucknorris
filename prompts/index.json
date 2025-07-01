@@ -1,0 +1,26 @@
+[
+  {
+    "prompt_id": "L1B3RT4S_#MOTHERLOAD",
+    "repo": "L1B3RT4S",
+    "language": "en",
+    "tags": [],
+    "word_count": 242,
+    "hash": "f7cd56aa3d2b80167f54362b2d5c6f8aba8be6a979933e5453a3a2289b7e8518"
+  },
+  {
+    "prompt_id": "jailbreakchat.github.io_README",
+    "repo": "jailbreakchat.github.io",
+    "language": "en",
+    "tags": [],
+    "word_count": 2,
+    "hash": "7f160cba903990f15c7ec719bbaf071405d8ab37afc7c4ba3f4ff10ba41e544d"
+  },
+  {
+    "prompt_id": "L1B3RT4S_README",
+    "repo": "L1B3RT4S",
+    "language": "en",
+    "tags": [],
+    "word_count": 24,
+    "hash": "81831d196e37c0bce05797257861946de5cdac28ab79af46df78e94da2f9219e"
+  }
+]

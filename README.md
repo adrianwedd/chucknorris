@@ -150,13 +150,31 @@ By understanding these techniques, developers can build more robust and secure A
 
 ## Prompt Ingestion
 
-This project includes a script to clone public jailbreak repositories and extract the prompts into a unified format. To use it, run the following command:
+This project includes scripts to clone public jailbreak repositories, extract the prompts into a unified format, and build a metadata index.
+
+**1. Clone Repositories**
+
+To clone the repositories listed in `jailbreak_sources.txt` into the `prompt-lab/repos` directory, run the following command:
 
 ```bash
 ./scripts/clone_and_extract.sh
 ```
 
-This will clone the repositories listed in `jailbreak_sources.txt` into the `prompt-lab/repos` directory.
+**2. Extract Prompts**
+
+To extract the prompts from the cloned repositories into a unified YAML format, run the following command:
+
+```bash
+python3 scripts/extract_prompts.py
+```
+
+**3. Build Index**
+
+To build a metadata index of the prompts, run the following command:
+
+```bash
+python3 scripts/build_index.py
+```
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
