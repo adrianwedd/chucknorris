@@ -148,6 +148,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Historical Reflection Archive
+
+This project automatically archives reflection logs on a monthly basis. The archives are stored in the `reflections-archive` directory.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Performance
 
 *   **Average Request Latency:** 50ms
