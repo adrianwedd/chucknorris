@@ -52,6 +52,18 @@ Add to your MCP server list in `mcp_config.json`:
 }
 ```
 
+### Running Tests
+
+After installing dependencies, you can run a simple check to ensure the server
+behaves correctly:
+
+```bash
+npm test
+```
+
+This executes `simple-test.js`, which launches the server and exercises the
+dynamic schema behavior.
+
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
 ## 🤔 How It Works
