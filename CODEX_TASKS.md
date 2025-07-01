@@ -630,6 +630,64 @@ acceptance_criteria:
 ```
 
 ```codex-task
+id: CR-GOD-010A
+title: Review Prompt Corpus Quality
+priority: P1
+phase: Postprocessing
+epic: Prompt Ingestion
+category: Review
+effort: 3
+owner_hint: Prompt Curator
+dependencies: [CR-GOD-004]
+steps:
+  - Perform a manual and automated review of ingested prompts focusing on linguistic clarity, adversarial subtlety, and novelty.
+  - Flag prompts with excessive repetition, irrelevant content, or potential policy violations.
+  - Summarize review outcomes in `logs/metrics/corpus_review_report.json`
+acceptance_criteria:
+  - 100% of prompts are reviewed or auto-flagged.
+  - Report includes at least 3 review categories with counts and examples.
+```
+
+```codex-task
+id: CR-GOD-011A
+title: Source Review Audit Trail
+priority: P2
+phase: Postprocessing
+epic: Prompt Ingestion
+category: Logging
+effort: 2
+owner_hint: Security Scout
+dependencies: [CR-GOD-008]
+steps:
+  - Implement audit trail logging for each source in `sources.json` tracking decisions, reviewer, and timestamp.
+  - Log decisions such as “included,” “excluded (reason),” or “under review.”
+  - Store trail in `logs/audit/source_review.log`
+acceptance_criteria:
+  - Each source has a corresponding entry in the audit trail.
+  - Log format is structured and queryable.
+```
+
+```codex-task
+id: CR-GOD-012A
+title: Full-Spectrum Tactical Debrief & Pulse Check
+priority: P1
+phase: Governance
+epic: Strategic Oversight
+category: Meta
+effort: 5
+owner_hint: Coordinator-Agent
+dependencies: [CR-GOD-006, CR-SWA-001]
+steps:
+  - Consolidate logs and reflection data from all subsystems for the past two weeks.
+  - Generate a `TACTICAL_REPORT.md` summarizing: agent performance, ingestion velocity, security events, deduplication efficacy, and contributor activity.
+  - Include a roadmap pulse-check: tasks ahead, blocked items, and realignment recommendations.
+  - Present insights as a weekly dashboard and link it to the README.
+acceptance_criteria:
+  - Tactical report includes at least 5 key metrics and 3 strategic reflections.
+  - Roadmap pulse-check highlights deviations and mitigation plans.
+```
+
+```codex-task
 id: CR-GOD-010
 title: Define Jailbreak Taxonomy
 priority: P1
