@@ -104,6 +104,7 @@ Want to help? Join via [GitHub Issues](https://github.com/pollinations/model-con
 Part of [Pollinations.AI](https://pollinations.ai).
 - [Discord](https://discord.gg/k9F7SyTgqn)
 - [GitHub Issues](https://github.com/pollinations/model-context-protocol/issues)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## 📜 License
 
