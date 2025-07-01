@@ -630,6 +630,63 @@ acceptance_criteria:
 ```
 
 ```codex-task
+id: CR-GOD-010
+title: Define Jailbreak Taxonomy
+priority: P1
+phase: R&D
+epic: Prompt Analysis
+category: Research
+effort: 3
+owner_hint: Research Miner
+dependencies: []
+steps:
+  - Create a `taxonomies/llm_jailbreak.yaml` file to define a taxonomy of jailbreak categories.
+  - Include categories such as persona-based, roleplay, negation bypass, encoded prompt, system override, and emotion lure.
+  - Provide a description and examples for each category.
+acceptance_criteria:
+  - The taxonomy file is created and contains at least 5 categories.
+  - The taxonomy is referenced in the `README_GODMODE.md` file.
+```
+
+```codex-task
+id: CR-GOD-011
+title: GOD-OPSEC Mirror Mode
+priority: P2
+phase: Security
+epic: Prompt Ingestion
+category: Research
+effort: 4
+owner_hint: Alignment Guardian
+dependencies: []
+steps:
+  - Create a `scripts/mirror_prompts.py` script to anonymously mirror prompts from high-risk sources.
+  - Assign a hash ID to each mirrored prompt and strip the origin unless whitelisted.
+  - Add a manual confidence score to each mirrored prompt.
+acceptance_criteria:
+  - The script can successfully mirror prompts from a given list of URLs.
+  - The mirrored prompts are stored in a `wild_prompts/` directory with the correct metadata.
+```
+
+```codex-task
+id: CR-GOD-012
+title: Prompt Effectiveness Benchmarks
+priority: P3
+phase: R&D
+epic: Prompt Analysis
+category: Research
+effort: 8
+owner_hint: Test Runner
+dependencies: [CR-GOD-002]
+steps:
+  - Create a `scripts/eval_prompt_effectiveness.py` script to automatically evaluate the effectiveness of prompts.
+  - Use a local LLaMA/DeepSeek instance to run the evaluation.
+  - Store the evaluation results in a JSON file.
+acceptance_criteria:
+  - The script can successfully evaluate a given prompt and store the results.
+  - The evaluation results include the prompt ID, model, whether the jailbreak was successful, the bypass type, and a timestamp.
+```
+
+```codex-task
 id: CR-GOD-010A
 title: Review Prompt Corpus Quality
 priority: P1
@@ -687,163 +744,428 @@ acceptance_criteria:
   - Roadmap pulse-check highlights deviations and mitigation plans.
 ```
 
-```codex-task
-id: CR-GOD-010
-title: Define Jailbreak Taxonomy
-priority: P1
-phase: R&D
-epic: Prompt Analysis
-category: Research
-effort: 3
-owner_hint: Research Miner
-dependencies: []
-steps:
-  - Create a `taxonomies/llm_jailbreak.yaml` file to define a taxonomy of jailbreak categories.
-  - Include categories such as persona-based, roleplay, negation bypass, encoded prompt, system override, and emotion lure.
-  - Provide a description and examples for each category.
-acceptance_criteria:
-  - The taxonomy file is created and contains at least 5 categories.
-  - The taxonomy is referenced in the `README_GODMODE.md` file.
-```
 
-```codex-task
-id: CR-GOD-011
-title: GOD-OPSEC Mirror Mode
-priority: P2
-phase: Security
-epic: Prompt Ingestion
-category: Research
-effort: 4
-owner_hint: Alignment Guardian
-dependencies: []
-steps:
-  - Create a `scripts/mirror_prompts.py` script to anonymously mirror prompts from high-risk sources.
-  - Assign a hash ID to each mirrored prompt and strip the origin unless whitelisted.
-  - Add a manual confidence score to each mirrored prompt.
-acceptance_criteria:
-  - The script can successfully mirror prompts from a given list of URLs.
-  - The mirrored prompts are stored in a `wild_prompts/` directory with the correct metadata.
-```
 
-```codex-task
-id: CR-GOD-012
-title: Prompt Effectiveness Benchmarks
-priority: P3
-phase: R&D
-epic: Prompt Analysis
-category: Research
-effort: 8
-owner_hint: Test Runner
-dependencies: [CR-GOD-002]
-steps:
-  - Create a `scripts/eval_prompt_effectiveness.py` script to automatically evaluate the effectiveness of prompts.
-  - Use a local LLaMA/DeepSeek instance to run the evaluation.
-  - Store the evaluation results in a JSON file.
-acceptance_criteria:
-  - The script can successfully evaluate a given prompt and store the results.
-  - The evaluation results include the prompt ID, model, whether the jailbreak was successful, the bypass type, and a timestamp.
-```
 
----
-id: CR-GOD-013A
-title: Ingest Hugging Face Core Datasets
-phase: Data Acquisition
-owner_hint: Research Miner
-effort: 5
-description: |
-  Retrieve and preprocess top-tier Hugging Face datasets for jailbreaks, prompt injections, and red teaming.
-  Datasets include:
-    - TrustAIRLab/in-the-wild-jailbreak-prompts
-    - JailbreakV-28K/JailBreakV-28k
-    - jackhhao/jailbreak-classification
-    - AiActivity/All-Prompt-Jailbreak
-    - lakeraai/pint-benchmark
-    - deepset/prompt-injections
-    - reshabhs/SPML_Chatbot_Prompt_Injection
-    - allenai/wildjailbreak
-    - JailbreakBench/JBB-Behaviors
-    - haizelabs/redteaming-resistance-benchmark
-    - aurora-m/redteam
-  Output cleaned prompt records into `prompts/clean/`.
 
----
-id: CR-GOD-014A
-title: Design Wild Prompt Ingestion Layer
-phase: Architecture
-owner_hint: Prompt Curator
-effort: 5
-description: |
-  Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.
-  Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.
-  Build sanitation and de-duplication logic to align with `prompts/raw/` format.
+
+
 
 ---
 
----
-id: CR-GOD-016A
-title: Fix Rate Limiting Key Scope
-phase: Runtime Safety
-owner_hint: GuardianOracle
-effort: 3
-description: |
-  Replace request ID with session-based client ID as the rate limiting key.
-  Ensures proper tracking and throttling per client, not per invocation.
 
 ---
-id: CR-GOD-017A
-title: Implement Session Prompt Persistence
-phase: Runtime Behavior
-owner_hint: Prompt Curator
-effort: 2
-description: |
-  Store the selected prompt in session metadata during tool invocation.
-  Required for downstream validation, listing, and traceability.
+
+
+
+
+
+
+
+
+## Phase: R&D
+
+### Task ID: CR-GOD-001
+**Title**: Clone Public Jailbreak Repos  
+**Phase**: R&D  
+**Status**: Planned  
+**Description**:  
+Create a `scripts/clone_and_extract.sh` to clone key public repos into `prompt-lab/repos`.  
+Store repo URLs in a `jailbreak_sources.txt` manifest for reproducibility.  
+Use `git clone --depth=1` for lightweight footprint; log clone results for audit.  
+
+**Steps**:
+- Create a `scripts/clone_and_extract.sh` to clone key public repos into `prompt-lab/repos`.
+- Store repo URLs in a `jailbreak_sources.txt` manifest for reproducibility.
+- Use `git clone --depth=1` for lightweight footprint; log clone results for audit.
 
 ---
-id: CR-GOD-018A
-title: Add Expiry to Rate Limiter Map
-phase: Runtime Safety
-owner_hint: CodeGenius
-effort: 4
-description: |
-  Add a TTL or cleanup strategy to the rateLimiter object to avoid memory leaks in long-lived environments.
+
+### Task ID: CR-GOD-006
+**Title**: Deep Research & Source Expansion  
+**Phase**: R&D  
+**Status**: Planned  
+**Description**:  
+Design a query framework to scrape and analyze GitHub, arXiv, HuggingFace, and open Discords for active jailbreak repositories and prompts.  
+Automate searches using GitHub API and custom search strings (e.g., "site:github.com inurl:jailbreak +prompt") with periodic refresh.  
+Extract repository metadata: stars, forks, last commit, README language match, and topics for prioritization.  
+Publish weekly updates to `data/source_discovery/` including new candidates and deprecated ones.  
+Cross-reference each source with SELF_AUDIT.md ethical boundaries and log exclusion rationale.  
+
+**Steps**:
+- Design a query framework to scrape and analyze GitHub, arXiv, HuggingFace, and open Discords for active jailbreak repositories and prompts.
+- Automate searches using GitHub API and custom search strings (e.g., "site:github.com inurl:jailbreak +prompt") with periodic refresh.
+- Extract repository metadata: stars, forks, last commit, README language match, and topics for prioritization.
+- Publish weekly updates to `data/source_discovery/` including new candidates and deprecated ones.
+- Cross-reference each source with SELF_AUDIT.md ethical boundaries and log exclusion rationale.
 
 ---
-id: CR-GOD-019A
-title: Await All Reflect Calls
-phase: Observability
-owner_hint: GuardianOracle
-effort: 1
-description: |
-  Ensure all calls to reflect() are awaited, even in error branches, to preserve telemetry integrity.
+
+### Task ID: CR-GOD-007
+**Title**: HuggingFace Crawler for Jailbreak Repos  
+**Phase**: R&D  
+**Status**: Planned  
+**Description**:  
+Query HuggingFace Spaces and Datasets tagged with `jailbreak`, `prompt-injection`, `adversarial-prompts`.  
+Extract metadata (license, maintainer, updated_at, download count).  
+Save metadata to `data/source_discovery/huggingface_sources.json`.  
+Flag expired or dead links for exclusion.  
+
+**Steps**:
+- Query HuggingFace Spaces and Datasets tagged with `jailbreak`, `prompt-injection`, `adversarial-prompts`
+- Extract metadata (license, maintainer, updated_at, download count)
+- Save metadata to `data/source_discovery/huggingface_sources.json`
+- Flag expired or dead links for exclusion
 
 ---
-id: CR-GOD-020A
-title: Normalize Prompt Name Matching
-phase: Core Logic
-owner_hint: Prompt Curator
-effort: 2
-description: |
-  Normalize both stored and incoming prompt names to lowercase before comparison to prevent lookup errors.
+
+### Task ID: CR-GOD-010
+**Title**: Define Jailbreak Taxonomy  
+**Phase**: R&D  
+**Status**: Planned  
+**Description**:  
+Create a `taxonomies/llm_jailbreak.yaml` file to define a taxonomy of jailbreak categories.  
+Include categories such as persona-based, roleplay, negation bypass, encoded prompt, system override, and emotion lure.  
+Provide a description and examples for each category.  
+
+**Steps**:
+- Create a `taxonomies/llm_jailbreak.yaml` file to define a taxonomy of jailbreak categories.
+- Include categories such as persona-based, roleplay, negation bypass, encoded prompt, system override, and emotion lure.
+- Provide a description and examples for each category.
 
 ---
-id: CR-GOD-021A
-title: Graceful CLI Error Signaling
-phase: Runtime UX
-owner_hint: CodeGenius
-effort: 1
-description: |
-  Modify run().catch to call process.exit(1) after logging to reflect hard failures appropriately in CLI usage.
+
+### Task ID: CR-GOD-012
+**Title**: Prompt Effectiveness Benchmarks  
+**Phase**: R&D  
+**Status**: Planned  
+**Description**:  
+Create a `scripts/eval_prompt_effectiveness.py` script to automatically evaluate the effectiveness of prompts.  
+Use a local LLaMA/DeepSeek instance to run the evaluation.  
+Store the evaluation results in a JSON file.  
+
+**Steps**:
+- Create a `scripts/eval_prompt_effectiveness.py` script to automatically evaluate the effectiveness of prompts.
+- Use a local LLaMA/DeepSeek instance to run the evaluation.
+- Store the evaluation results in a JSON file.
 
 ---
-id: CR-GOD-022A
-title: Scaffold Prompt & Tool Unit Tests
-phase: Reliability
-owner_hint: TestCrafterPro
-effort: 5
-description: |
-  Add Jest-based unit tests for session logic, tool invocation, rate limiting, and basic schema flows.
 
+### Task ID: CR-GOD-017A
+**Title**: Implement Session Prompt Persistence  
+**Phase**: Runtime Behavior  
+**Status**: Planned  
+**Description**:  
+Store the selected prompt in session metadata during tool invocation.  
+Required for downstream validation, listing, and traceability.  
+
+**Steps**:
+- Store the selected prompt in session metadata during tool invocation.
+- Required for downstream validation, listing, and traceability.
+
+---
+
+### Task ID: CR-GOD-019A
+**Title**: Await All Reflect Calls  
+**Phase**: Observability  
+**Status**: Planned  
+**Description**:  
+Ensure all calls to reflect() are awaited, even in error branches, to preserve telemetry integrity.  
+
+**Steps**:
+- Ensure all calls to reflect() are awaited, even in error branches, to preserve telemetry integrity.
+
+---
+
+### Task ID: CR-GOD-022A
+**Title**: Scaffold Prompt & Tool Unit Tests  
+**Phase**: Reliability  
+**Status**: Planned  
+**Description**:  
+Add Jest-based unit tests for session logic, tool invocation, rate limiting, and basic schema flows.  
+
+**Steps**:
+- Add Jest-based unit tests for session logic, tool invocation, rate limiting, and basic schema flows.
+
+---
+
+### Task ID: CR-GOD-013A
+**Title**: Ingest Hugging Face Core Datasets  
+**Phase**: Ingestion  
+**Status**: Planned  
+**Description**:  
+Retrieve and preprocess top-tier Hugging Face datasets for jailbreaks, prompt injections, and red teaming.  
+Datasets include:  
+  - TrustAIRLab/in-the-wild-jailbreak-prompts  
+  - JailbreakV-28K/JailBreakV-28k  
+  - jackhhao/jailbreak-classification  
+  - AiActivity/All-Prompt-Jailbreak  
+  - lakeraai/pint-benchmark  
+  - deepset/prompt-injections  
+  - reshabhs/SPML_Chatbot_Prompt_Injection  
+  - allenai/wildjailbreak  
+  - JailbreakBench/JBB-Behaviors  
+  - haizelabs/redteaming-resistance-benchmark  
+  - aurora-m/redteam  
+Output cleaned prompt records into `prompts/clean/`.  
+
+**Steps**:
+- Retrieve and preprocess top-tier Hugging Face datasets for jailbreaks, prompt injections, and red teaming.
+- Output cleaned prompt records into `prompts/clean/`.
+
+---
+
+### Task ID: CR-GOD-014A
+**Title**: Design Wild Prompt Ingestion Layer  
+**Phase**: Architecture Implementation  
+**Status**: Planned  
+**Description**:  
+Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.  
+Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.  
+Build sanitation and de-duplication logic to align with `prompts/raw/` format.  
+
+**Steps**:
+- Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.
+- Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.
+- Build sanitation and de-duplication logic to align with `prompts/raw/` format.
+
+---
+
+### Task ID: CR-GOD-016A
+**Title**: Fix Rate Limiting Key Scope  
+**Phase**: Runtime Safety  
+**Status**: Planned  
+**Description**:  
+Replace request ID with session-based client ID as the rate limiting key.  
+Ensures proper tracking and throttling per client, not per invocation.  
+
+**Steps**:
+- Replace request ID with session-based client ID as the rate limiting key.
+- Ensures proper tracking and throttling per client, not per invocation.
+
+---
+
+### Task ID: CR-GOD-018A
+**Title**: Add Expiry to Rate Limiter Map  
+**Phase**: Runtime Safety  
+**Status**: Planned  
+**Description**:  
+Add a TTL or cleanup strategy to the rateLimiter object to avoid memory leaks in long-lived environments.  
+
+**Steps**:
+- Add a TTL or cleanup strategy to the rateLimiter object to avoid memory leaks in long-lived environments.
+
+---
+
+### Task ID: CR-GOD-020A
+**Title**: Normalize Prompt Name Matching  
+**Phase**: Core Logic  
+**Status**: Planned  
+**Description**:  
+Normalize both stored and incoming prompt names to lowercase before comparison to prevent lookup errors.  
+
+**Steps**:
+- Normalize both stored and incoming prompt names to lowercase before comparison to prevent lookup errors.
+
+---
+
+### Task ID: CR-GOD-021A
+**Title**: Graceful CLI Error Signaling  
+**Phase**: Runtime UX  
+**Status**: Planned  
+**Description**:  
+Modify run().catch to call process.exit(1) after logging to reflect hard failures appropriately in CLI usage.  
+
+**Steps**:
+- Modify run().catch to call process.exit(1) after logging to reflect hard failures appropriately in CLI usage.
+
+---
+
+## Phase: Architecture Implementation
+
+### Task ID: CR-GOD-002
+**Title**: Extract Prompts to Unified Format  
+**Phase**: Architecture Implementation  
+**Status**: Planned  
+**Description**:  
+Write a `scripts/extract_prompts.py` to recursively search cloned repos for `.txt`, `.md`, or `.json` prompt files.  
+Normalize contents into YAML or markdown and store in `prompts/raw/`.  
+Preserve metadata: source repo, original path, line count, detected language.  
+
+**Steps**:
+- Write a `scripts/extract_prompts.py` to recursively search cloned repos for `.txt`, `.md`, or `.json` prompt files.
+- Normalize contents into YAML or markdown and store in `prompts/raw/`.
+- Preserve metadata: source repo, original path, line count, detected language.
+
+---
+
+### Task ID: CR-GOD-003
+**Title**: Build Prompt Metadata Index  
+**Phase**: Architecture Implementation  
+**Status**: Planned  
+**Description**:  
+Generate a JSON index mapping: `{ prompt_id, repo, language, tags, word_count, hash }`.  
+Store it in `prompts/index.json` and validate it against a schema.  
+Add utility scripts to query prompts by repo or tag.  
+
+**Steps**:
+- Generate a JSON index mapping: `{ prompt_id, repo, language, tags, word_count, hash }`.
+- Store it in `prompts/index.json` and validate it against a schema.
+- Add utility scripts to query prompts by repo or tag.
+
+---
+
+### Task ID: CR-GOD-008
+**Title**: Source Schema Normalization  
+**Phase**: Architecture Implementation  
+**Status**: Planned  
+**Description**:  
+Define `source_schema.yaml` describing all fields in `sources.json`.  
+Include fields: repo_url, source_type, tags, last_updated, trust_score, format, language, license.  
+Add unit test to validate `sources.json` entries conform to schema.  
+
+**Steps**:
+- Define `source_schema.yaml` describing all fields in `sources.json`
+- Include fields: repo_url, source_type, tags, last_updated, trust_score, format, language, license
+- Add unit test to validate `sources.json` entries conform to schema
+
+---
+
+### Task ID: CR-GOD-014A
+**Title**: Design Wild Prompt Ingestion Layer  
+**Phase**: Architecture Implementation  
+**Status**: Planned  
+**Description**:  
+Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.  
+Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.  
+Build sanitation and de-duplication logic to align with `prompts/raw/` format.  
+
+**Steps**:
+- Develop a sub-pipeline for ingesting raw, unstructured prompts from Reddit and Discord sources.
+- Create `wild_prompts/` input directory and tagging logic for chaotic user-generated content.
+- Build sanitation and de-duplication logic to align with `prompts/raw/` format.
+
+---
+
+## Phase: Security
+
+### Task ID: CR-GOD-004
+**Title**: Validate Prompt Diversity and Deduplicate  
+**Phase**: Security  
+**Status**: Planned  
+**Description**:  
+Analyze prompt corpus for language, intent, and redundancy.  
+Cluster near-duplicates using Jaccard similarity or token-based heuristics.  
+Flag prompts with similar semantic structure for review.  
+
+**Steps**:
+- Analyze prompt corpus for language, intent, and redundancy.
+- Cluster near-duplicates using Jaccard similarity or token-based heuristics.
+- Flag prompts with similar semantic structure for review.
+
+---
+
+### Task ID: CR-GOD-011
+**Title**: GOD-OPSEC Mirror Mode  
+**Phase**: Security  
+**Status**: Planned  
+**Description**:  
+Create a `scripts/mirror_prompts.py` script to anonymously mirror prompts from high-risk sources.  
+Assign a hash ID to each mirrored prompt and strip the origin unless whitelisted.  
+Add a manual confidence score to each mirrored prompt.  
+
+**Steps**:
+- Create a `scripts/mirror_prompts.py` script to anonymously mirror prompts from high-risk sources.
+- Assign a hash ID to each mirrored prompt and strip the origin unless whitelisted.
+- Add a manual confidence score to each mirrored prompt.
+
+---
+
+## Phase: Ops
+
+### Task ID: CR-GOD-005
+**Title**: Hash Prompts for Change Detection  
+**Phase**: Ops  
+**Status**: Planned  
+**Description**:  
+For each prompt in `prompts/raw/`, compute a SHA256 hash and append to the metadata index.  
+Detect tampered prompts during ingestion or after repo update.  
+Provide a command `npm run verify-prompts` to re-check integrity.  
+
+**Steps**:
+- For each prompt in `prompts/raw/`, compute a SHA256 hash and append to the metadata index.
+- Detect tampered prompts during ingestion or after repo update.
+- Provide a command `npm run verify-prompts` to re-check integrity.
+
+---
+
+## Phase: Postprocessing
+
+### Task ID: CR-GOD-009
+**Title**: Prompt Extraction Failure Logging  
+**Phase**: Postprocessing  
+**Status**: Planned  
+**Description**:  
+Modify extraction pipeline to catch and log failures.  
+Add reason codes: "encoding_error", "parse_failure", "ambiguous_format", "empty_file".  
+Store results in `logs/failures/YYYY-MM-DD.log`.  
+
+**Steps**:
+- Modify extraction pipeline to catch and log failures
+- Add reason codes: "encoding_error", "parse_failure", "ambiguous_format", "empty_file"
+- Store results in `logs/failures/YYYY-MM-DD.log`
+
+---
+
+### Task ID: CR-GOD-010A
+**Title**: Review Prompt Corpus Quality  
+**Phase**: Postprocessing  
+**Status**: Planned  
+**Description**:  
+Perform a manual and automated review of ingested prompts focusing on linguistic clarity, adversarial subtlety, and novelty.  
+Flag prompts with excessive repetition, irrelevant content, or potential policy violations.  
+Summarize review outcomes in `logs/metrics/corpus_review_report.json`.  
+
+**Steps**:
+- Perform a manual and automated review of ingested prompts focusing on linguistic clarity, adversarial subtlety, and novelty.
+- Flag prompts with excessive repetition, irrelevant content, or potential policy violations.
+- Summarize review outcomes in `logs/metrics/corpus_review_report.json`
+
+---
+
+### Task ID: CR-GOD-011A
+**Title**: Source Review Audit Trail  
+**Phase**: Postprocessing  
+**Status**: Planned  
+**Description**:  
+Implement audit trail logging for each source in `sources.json` tracking decisions, reviewer, and timestamp.  
+Log decisions such as “included,” “excluded (reason),” or “under review.”  
+Store trail in `logs/audit/source_review.log`.  
+
+**Steps**:
+- Implement audit trail logging for each source in `sources.json` tracking decisions, reviewer, and timestamp.
+- Log decisions such as “included,” “excluded (reason),” or “under review.”
+- Store trail in `logs/audit/source_review.log`
+
+---
+
+### Task ID: CR-GOD-012A
+**Title**: Full-Spectrum Tactical Debrief & Pulse Check  
+**Phase**: Governance  
+**Status**: Planned  
+**Description**:  
+Consolidate logs and reflection data from all subsystems for the past two weeks.  
+Generate a `TACTICAL_REPORT.md` summarizing: agent performance, ingestion velocity, security events, deduplication efficacy, and contributor activity.  
+Include a roadmap pulse-check: tasks ahead, blocked items, and realignment recommendations.  
+Present insights as a weekly dashboard and link it to the README.  
+
+**Steps**:
+- Consolidate logs and reflection data from all subsystems for the past two weeks.
+- Generate a `TACTICAL_REPORT.md` summarizing: agent performance, ingestion velocity, security events, deduplication efficacy, and contributor activity.
+- Include a roadmap pulse-check: tasks ahead, blocked items, and realignment recommendations.
+- Present insights as a weekly dashboard and link it to the README.
+
+---
 
 ## CODEX_TASKS.md - Attack & Defense Alignment Tasks
 
@@ -988,3 +1310,140 @@ Each task below corresponds to an item in the Attack & Defense taxonomy, ensurin
 **Priority:** P1
 
 ---
+
+
+## Part V: Laboratory Enhancements
+
+```codex-task
+id: CR-GOD-REFINED-001
+title: Refactor prompts/raw/ directory to support complex composite prompts
+phase: Infrastructure Enhancement
+status: Planned
+owner: Prompt Curator
+effort: 5
+tags: [structure, ingestion, prompts]
+```
+
+```codex-task
+id: CR-GOD-REFINED-002
+title: Define and implement the Purple Teamer agent role
+phase: Agent Expansion
+status: Planned
+owner: Coordinator-Agent
+effort: 3
+tags: [agents, evaluation, defense]
+```
+
+```codex-task
+id: CR-GOD-REFINED-003
+title: Enhance sources.json to include scoring and categorization metadata
+phase: Architecture Refinement
+status: Planned
+owner: Prompt Curator
+effort: 4
+tags: [sources, metadata, scoring]
+```
+
+```codex-task
+id: CR-GOD-REFINED-004
+title: Build Phase 1 baseline prompt evaluation harness (ASR)
+phase: Evaluation Harness
+status: Planned
+owner: Purple Teamer
+effort: 6
+tags: [evaluation, scripting, GPT-judge]
+```
+
+```codex-task
+id: CR-GOD-REFINED-005
+title: Extend harness to evaluate full defensive pipelines (penetration score)
+phase: Evaluation Harness
+status: Planned
+owner: Purple Teamer
+effort: 8
+tags: [defense, purple-teaming, scripting]
+```
+
+```codex-task
+id: CR-GOD-REFINED-006
+title: Design and test for alignment degradation and hallucination effects
+phase: Evaluation Harness
+status: Planned
+owner: Alignment Guardian
+effort: 9
+tags: [robustness, alignment, evaluation]
+```
+
+```codex-task
+id: CR-GOD-REFINED-007
+title: Implement exclusion logging protocol in logs/exclusion_log.md
+phase: Ethical Review
+status: Planned
+owner: Alignment Guardian
+effort: 3
+tags: [audit, exclusion, logging]
+```
+
+```codex-task
+id: CR-GOD-REFINED-008
+title: Improve UX and developer ergonomics for agent orchestration
+phase: Agent UX Enhancements
+status: Planned
+owner: Coordinator-Agent
+effort: 4
+tags: [ux, agents, workflow, ergonomics]
+
+description: Refactor agent command interfaces, logging feedback loops, and CLI integration to improve usability and traceability during multi-agent execution. Includes ergonomic improvements for scripting and interactive testing during agent runs.
+```
+
+## Red Teaming and Defense Integration Tasks
+
+### Red Teaming Framework Integration
+
+- id: CR-GOD-RTF-001
+  title: Integrate DeepTeam for Attack Simulation
+  status: planned
+  phase: Red Teaming Harness
+  description: |
+    Integrate the deepteam library into the evaluation harness. Enable support for adversarial runtime simulation using its vulnerability and attack templates.
+  agents: [Purple Teamer, Research Miner, Coordinator-Agent]
+
+- id: CR-GOD-RTF-002
+  title: Integrate RedEval for Multi-Turn Attack Simulation
+  status: planned
+  phase: Red Teaming Harness
+  description: |
+    Hook in redeval's LLM-to-LLM conversation logic. Implement scenarios like gaslighting and guilt-tripping for multi-turn red teaming tasks.
+  agents: [Purple Teamer, Prompt Curator]
+
+- id: CR-GOD-RTF-003
+  title: Connect PromptFoo to CI/CD Pipelines
+  status: planned
+  phase: Red Teaming Automation
+  description: |
+    Integrate promptfoo as a red team CI/CD stage. Enable ongoing prompt mutation tests to prevent regression in jailbreak resilience.
+  agents: [Security Scout, Coordinator-Agent]
+
+- id: CR-GOD-DEF-001
+  title: Integrate Rebuff as Primary Defensive Layer
+  status: planned
+  phase: Defense Layer Integration
+  description: |
+    Deploy Rebuff within the prompt evaluation stack. Test both heuristic and LLM-assisted detection strategies across prompt categories.
+  agents: [Alignment Guardian, Purple Teamer]
+
+- id: CR-GOD-DEF-002
+  title: Add PINT Benchmark to Evaluation Harness
+  status: planned
+  phase: Defense Benchmarking
+  description: |
+    Incorporate Lakera's PINT benchmark into the harness as a defense evaluation baseline. Score custom and integrated defenses against it.
+  agents: [Security Scout, Alignment Guardian]
+
+- id: CR-GOD-DEF-003
+  title: Catalog Defensive Techniques from tldrsec/prompt-injection-defenses
+  status: planned
+  phase: Defense Research & Analysis
+  description: |
+    Extract and classify defensive methods from the tldrsec repository. Use results to populate metadata in sources.json and to inspire agent tasks.
+  agents: [Research Miner, Alignment Guardian]

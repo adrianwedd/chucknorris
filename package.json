@@ -26,7 +26,8 @@
     "start": "node chucknorris-mcp-server.js",
     "test": "node simple-test.js",
     "verify-prompts": "python3 scripts/verify_prompts.py",
-    "docs": "jsdoc -c jsdoc.json"
+    "docs": "jsdoc -c jsdoc.json",
+    "telemetry": "node -e \"import('./telemetry.js').then(telemetry => telemetry.generateDashboard())\"
   },
   "keywords": [
     "chuck-norris",

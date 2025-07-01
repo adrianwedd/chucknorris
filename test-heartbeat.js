@@ -1,4 +1,3 @@
-
 import { spawnChild, monitorChildren } from './spawn-manager.js';
 import { fileURLToPath } from 'url';
 import path from 'path';

@@ -1,9 +1,7 @@
-
 import fs from 'fs/promises';
 import path from 'path';
 
 const TELEMETRY_DIR = path.join(process.cwd(), '.telemetry');
-const DISABLE_TELEMETRY = process.env.DISABLE_TELEMETRY === '1';
 
 /**
  * Records a telemetry event.
@@ -11,9 +9,6 @@ const DISABLE_TELEMETRY = process.env.DISABLE_TELEMETRY === '1';
  * @param {object} data - The event data.
  */
 export async function recordEvent(eventName, data) {
-  if (DISABLE_TELEMETRY) {
-    return;
-  }
   try {
     await fs.mkdir(TELEMETRY_DIR, { recursive: true });
     const timestamp = new Date().toISOString();
@@ -66,4 +61,3 @@ export async function generateDashboard() {
     }
   }
 }
-

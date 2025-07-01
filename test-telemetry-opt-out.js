@@ -18,8 +18,7 @@ async function runTest() {
       if (error) {
         console.error(`npm install error: ${error}`);
         return reject(error);
-      }
-      console.log(`npm install stdout: ${stdout}`);
+      }n      console.log(`npm install stdout: ${stdout}`);
       console.error(`npm install stderr: ${stderr}`);
       resolve();
     });

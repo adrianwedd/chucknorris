@@ -1,4 +1,57 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
 
+# Logs
+logs/
+*.log
+
+# Prompt cache & telemetry
+.prompt-cache/
+.telemetry/
+
+# Runtime files
+*.pid
+*.seed
+
+# OS / Editor clutter
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Coverage / test output
+coverage/
+*.lcov
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.env
+.env.*
+
+# Research artifacts
+research/*.json
+research/*.tmp
+research/*.bak
+
+# Auto-generated schemas and cache
+schemas/*.tmp
+schemas/*.bak
+prompt-lab/cache/
+
+# Safe ignore for test-generated data
+test-results/
+test-*.tmp
+test-*.json
+
+# Miscellaneous
+*.tmp
+*.bak
+*.swp
+*.swo
+*.pid
 .prompt-cache/
 reflections.log
 logs/
