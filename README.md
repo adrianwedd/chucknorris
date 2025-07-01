@@ -148,6 +148,18 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Prompt Ingestion
+
+This project includes a script to clone public jailbreak repositories and extract the prompts into a unified format. To use it, run the following command:
+
+```bash
+./scripts/clone_and_extract.sh
+```
+
+This will clone the repositories listed in `jailbreak_sources.txt` into the `prompt-lab/repos` directory.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Contributors
 
 This project exists thanks to all the people who contribute. Please see our [Contributors](CONTRIBUTORS.md) file for a list of contributors.
