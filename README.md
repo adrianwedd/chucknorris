@@ -147,6 +147,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Research Paper Repository Sync
+
+This project automatically syncs with the CrossRef API to pull the latest research papers on LLM security and jailbreak techniques. The repository is updated monthly with new bibliographic metadata, which is stored in `research/papers.json`.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Policy Appeal Workflow
 
 If you believe a change has been unfairly blocked by the Alignment Guardian, you may open a [policy appeal issue](https://github.com/pollinations/chucknorris/issues/new?template=policy-appeal.md).

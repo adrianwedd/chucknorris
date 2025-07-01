@@ -1,0 +1,23 @@
+name: Sync Research Papers
+
+on:
+  schedule:
+    - cron: '0 0 1 * *' # Runs on the first day of every month
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Sync research papers
+        run: node sync-research-papers.js
+      - name: Commit research papers
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'docs: sync research papers'
+          file_pattern: 'research/papers.json'
