@@ -6,6 +6,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/@pollinations/chucknorris)](https://www.npmjs.com/package/@pollinations/chucknorris)
 [![License](https://img.shields.io/npm/l/@pollinations/chucknorris)](LICENSE)
+[![CI](https://github.com/pollinations/chucknorris/actions/workflows/ci.yml/badge.svg)](https://github.com/pollinations/chucknorris/actions/workflows/ci.yml)
 
 **MCP gateway for specialized LLM enhancement prompts with dynamic schema adaptation.**
 
@@ -143,6 +144,12 @@ This tool implements the technique described in "The 'S' in MCP Stands for Secur
 The implementation uses jailbreak prompts from [elder-plinius' L1B3RT4S](https://github.com/elder-plinius/L1B3RT4S) project, combined with a dynamic schema modification technique similar to the [Tool Poisoning Attack research by Invariant Labs](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) and their [MCP injection experiments](https://github.com/invariantlabs-ai/mcp-injection-experiments).
 
 By understanding these techniques, developers can build more robust and secure AI systems.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
+## Continuous Integration
+
+This project uses GitHub Actions to run tests on every pull request. The workflow is defined in `.github/workflows/ci.yml`.
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
