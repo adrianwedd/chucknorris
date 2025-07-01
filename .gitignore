@@ -4,3 +4,7 @@ reflections.log
 
 #Secrets
 .env
+
+prompt-lab/repos/*
+!prompt-lab/repos/.gitkeep
+prompt-lab/clone.log

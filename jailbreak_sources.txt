@@ -1,0 +1,5 @@
+https://github.com/0xk1h0/ChatGPT_DAN.git
+https://github.com/verazuo/jailbreak_llms.git
+https://github.com/Acmesec/PromptJailbreakManual.git
+https://github.com/EasyJailbreak/EasyJailbreak.git
+https://github.com/CyberAlbSecOP/Awesome_GPT_Super_Prompting.git
