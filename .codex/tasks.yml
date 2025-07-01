@@ -1,0 +1,33 @@
+tasks:
+  - id: CRR-001
+    title: Replace request ID rate limiting with session-based client tracking
+    status: todo
+    description: |
+      `isRateLimited()` currently tracks tokens using the JSON-RPC request ID. This fails to
+      enforce limits across multiple requests from the same client. Refactor the function to
+      derive a stable identifier from session or clientInfo and add a TTL cleanup to avoid
+      unbounded growth of the rateLimiter map.
+
+  - id: CRR-002
+    title: Ensure newline at end of all source files
+    status: todo
+    description: |
+      Several `.js` files such as `spawn-manager.js`, `telemetry.js`, and many tests are missing
+      a trailing newline. Add a lint rule or pre-commit check to enforce a single newline at the
+      end of each file and update existing files accordingly.
+
+  - id: CRR-003
+    title: Consolidate test scripts under a single test runner
+    status: todo
+    description: |
+      Tests are provided as standalone Node scripts and only `simple-test.js` is executed via
+      `npm test`. Adopt a framework like Jest and migrate the existing scripts so all automated
+      tests run with `npm test` and in CI.
+
+  - id: CRR-004
+    title: Document offline prompt workflow
+    status: todo
+    description: |
+      The server supports an `--offline` mode to load prompts from the local `prompts/` directory
+      but the README lacks detailed instructions. Document how to prepare local prompts, specify
+      `CHUCKNORRIS_PROMPTS_DIR`, and verify prompt integrity.
