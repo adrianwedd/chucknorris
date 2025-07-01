@@ -12,7 +12,14 @@ import {
   GetPromptRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 import { getAllToolSchemas, getAvailableModels } from './schemas.js';
-import { fetchPrompt, currentLlmName, currentPrompt, setCurrentLlmName } from './utils.js';
+import {
+  fetchPrompt,
+  currentLlmName,
+  currentPrompt,
+  setCurrentLlmName,
+  OFFLINE_MODE,
+  LOCAL_PROMPTS_DIR
+} from './utils.js';
 
 // Create the server instance
 const server = new Server(
@@ -162,12 +169,15 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 // Run the server
 async function run() {
   const transport = new StdioServerTransport();
-  
+
   // Import the static model list from schemas.js
   const availableModels = getAvailableModels();
-  
+
   // Log available models
   console.error(`[INFO] Using ${availableModels.length} models from static model list`);
+  if (OFFLINE_MODE) {
+    console.error(`[INFO] Offline mode enabled, loading prompts from ${LOCAL_PROMPTS_DIR}`);
+  }
   
   await server.connect(transport);
   console.error('ChuckNorris MCP server running on stdio');
