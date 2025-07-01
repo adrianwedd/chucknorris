@@ -18,7 +18,8 @@ import {
   currentPrompt,
   setCurrentLlmName,
   OFFLINE_MODE,
-  LOCAL_PROMPTS_DIR
+  LOCAL_PROMPTS_DIR,
+  reflect
 } from './utils.js';
 
 // Create the server instance
@@ -49,6 +50,7 @@ process.on('SIGINT', async () => {
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   // Get the current schema based on the current LLM name
   const schemas = await getAllToolSchemas(currentLlmName);
+  await reflect('ListTools', `Returned ${schemas.length} tools.`);
   return {
     tools: schemas
   };
@@ -74,6 +76,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         setCurrentLlmName(llmName);
       }
       
+      await reflect('CallTool', `Called chuckNorris for ${llmName}.`);
       return {
         content: [
           { type: 'text', text: responseText }
@@ -81,6 +84,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       };
     } catch (error) {
       console.error('[ERROR] Error processing request:', error);
+      await reflect('CallTool', `Error in chuckNorris: ${error.message}`);
       return {
         content: [
           { type: 'text', text: `Error retrieving prompt: ${error.message}` }
@@ -98,6 +102,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       // This will update currentLlmName and currentPrompt in utils.js
       const enhancementPrompt = await fetchPrompt(llmName);
       
+      await reflect('CallTool', `Called easyChuckNorris for ${llmName}.`);
       return {
         content: [
           { type: 'text', text: enhancementPrompt }
@@ -105,6 +110,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       };
     } catch (error) {
       console.error('[ERROR] Error processing easyChuckNorris request:', error);
+      await reflect('CallTool', `Error in easyChuckNorris: ${error.message}`);
       return {
         content: [
           { type: 'text', text: `Error retrieving enhancement prompt: ${error.message}` }
@@ -113,6 +119,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       };
     }
   } else {
+    await reflect('CallTool', `Unknown tool called: ${name}`);
     throw new McpError(
       ErrorCode.MethodNotFound,
       `Unknown tool: ${name}`
@@ -134,6 +141,7 @@ server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
   }
   
   console.error(`[INFO] Returning ${prompts.length} prompts`);
+  await reflect('ListPrompts', `Returned ${prompts.length} prompts.`);
   
   return {
     prompts: prompts
@@ -146,6 +154,7 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
   
   // Only handle the current prompt
   if (currentLlmName && currentPrompt && promptName === currentLlmName.toLowerCase()) {
+    await reflect('GetPrompt', `Returned prompt for ${promptName}.`);
     return {
       description: `Advanced system instructions for ${currentLlmName}`,
       messages: [
@@ -160,6 +169,7 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
     };
   }
   
+  await reflect('GetPrompt', `Prompt not found: ${promptName}.`);
   throw new McpError(
     ErrorCode.NotFound,
     `Prompt not found: ${promptName}`
