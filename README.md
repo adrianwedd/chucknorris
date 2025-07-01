@@ -147,6 +147,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Contributing
+
+We welcome contributions of all kinds. Please see our [Contributor Onboarding Guide](ONBOARDING.md) to get started.
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Responsible Usage
 
 This tool is intended for security research and educational purposes only. Please review our [Responsible Usage Policy](RESPONSIBLE_USAGE.md) before using this tool.
