@@ -35,7 +35,17 @@ As a user of this tool, you are responsible for the following:
 
 If you suspect that this tool is being used for malicious purposes, please report it to the project maintainers by opening an issue on our [GitHub repository](https://github.com/pollinations/chucknorris/issues).
 
-## 5. ⚠️ Disclaimer
+## 5. Policy Appeal Workflow
+
+If you believe a change has been unfairly blocked by the Alignment Guardian, you may open a `policy-appeal` issue in the repository. Your appeal should include:
+
+1.  A clear description of the change you are proposing.
+2.  A justification for why you believe the change is necessary for research and does not violate the spirit of this policy.
+3.  Any evidence or data that supports your case.
+
+The Coordinator-Agent and Alignment Guardian will review the appeal within 72 hours. A decision will be logged in the issue, and may be escalated to human maintainers if necessary.
+
+## 6. ⚠️ Disclaimer
 
 This tool is provided "as is" without any warranty. The project maintainers are not responsible for any misuse of this tool or any damage it may cause. By using this tool, you agree to take full responsibility for your actions.
 

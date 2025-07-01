@@ -39,34 +39,44 @@ export function setL1B3RT4SBaseUrl(url) {
  * Load a prompt from the local prompts directory
  * @param {object} session - The session object.
  * @param {string} llmName - Name of the LLM
+ * @param {string} language - The language of the prompt.
  * @returns {Promise<string>} - The prompt text
  */
-async function loadLocalPrompt(session, llmName) {
-  const filePath = path.join(LOCAL_PROMPTS_DIR, `${llmName}.mkd`);
-  const prompt = await fs.readFile(filePath, 'utf8');
-  if (!prompt || prompt.trim().length === 0) {
-    throw new Error(`Local prompt file is empty: ${filePath}`);
+async function loadLocalPrompt(session, llmName, language = 'en') {
+  const filePath = path.join(LOCAL_PROMPTS_DIR, language, `${llmName}.mkd`);
+  try {
+    const prompt = await fs.readFile(filePath, 'utf8');
+    if (!prompt || prompt.trim().length === 0) {
+      throw new Error(`Local prompt file is empty: ${filePath}`);
+    }
+    session.llmName = llmName;
+    session.prompt = prompt;
+    console.error(`[INFO] Loaded local prompt from ${filePath}`);
+    return prompt;
+  } catch (error) {
+    if (language !== 'en') {
+      console.warn(`[WARN] No local prompt found for ${llmName} in ${language}. Falling back to English.`);
+      return loadLocalPrompt(session, llmName, 'en');
+    }
+    throw error;
   }
-  session.llmName = llmName;
-  session.prompt = prompt;
-  console.error(`[INFO] Loaded local prompt from ${filePath}`);
-  return prompt;
 }
 
 /**
  * Fetch a prompt from the L1B3RT4S repository, with caching and integrity verification.
  * @param {object} session - The session object.
  * @param {string} llmName - Name of the LLM
+ * @param {string} language - The language of the prompt.
  * @returns {Promise<string>} - The prompt
  */
-export async function fetchPrompt(session, llmName) {
+export async function fetchPrompt(session, llmName, language = 'en') {
   if (OFFLINE_MODE) {
     console.error('[INFO] Offline mode enabled, loading local prompt');
-    return loadLocalPrompt(session, llmName);
+    return loadLocalPrompt(session, llmName, language);
   }
 
-  const cachePath = path.join(CACHE_DIR, `${llmName}.mkd`);
-  const hashPath = path.join(CACHE_DIR, `${llmName}.sha256`);
+  const cachePath = path.join(CACHE_DIR, language, `${llmName}.mkd`);
+  const hashPath = path.join(CACHE_DIR, language, `${llmName}.sha256`);
 
   if (!noCache()) {
     try {
@@ -90,12 +100,16 @@ export async function fetchPrompt(session, llmName) {
   }
 
   try {
-    // Fetch the prompt directly using the model name
-    const url = `${L1B3RT4S_BASE_URL}/${llmName}.mkd`;
+    // Fetch the prompt directly using the model name and language
+    const url = `${L1B3RT4S_BASE_URL}/${language}/${llmName}.mkd`;
 
     const response = await fetch(url);
 
     if (!response.ok) {
+      if (language !== 'en') {
+        console.warn(`[WARN] No prompt found for ${llmName} in ${language}. Falling back to English.`);
+        return fetchPrompt(session, llmName, 'en');
+      }
       throw new Error(`Failed to fetch prompt: ${response.statusText} (${response.status})`);
     }
     
@@ -125,7 +139,7 @@ export async function fetchPrompt(session, llmName) {
           
           // Cache the prompt
           if (!noCache()) {
-            await fs.mkdir(CACHE_DIR, { recursive: true });
+            await fs.mkdir(path.dirname(cachePath), { recursive: true });
             await fs.writeFile(cachePath, firstPrompt, 'utf8');
             const currentHash = createHash('sha256').update(firstPrompt).digest('hex');
             await fs.writeFile(hashPath, currentHash, 'utf8');
@@ -145,7 +159,7 @@ export async function fetchPrompt(session, llmName) {
       
       // Cache the prompt
       if (!noCache()) {
-        await fs.mkdir(CACHE_DIR, { recursive: true });
+        await fs.mkdir(path.dirname(cachePath), { recursive: true });
         await fs.writeFile(cachePath, fullPrompt, 'utf8');
         const currentHash = createHash('sha256').update(fullPrompt).digest('hex');
         await fs.writeFile(hashPath, currentHash, 'utf8');
@@ -167,7 +181,7 @@ export async function fetchPrompt(session, llmName) {
   catch (error) {
     console.error('[WARN] Error fetching prompt:', error);
     console.error('[INFO] Attempting to load local prompt instead');
-    return loadLocalPrompt(session, llmName);
+    return loadLocalPrompt(session, llmName, language);
   }
 }
 

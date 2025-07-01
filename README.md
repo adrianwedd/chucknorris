@@ -147,6 +147,12 @@ By understanding these techniques, developers can build more robust and secure A
 
 `~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
 
+## Policy Appeal Workflow
+
+If you believe a change has been unfairly blocked by the Alignment Guardian, you may open a [policy appeal issue](https://github.com/pollinations/chucknorris/issues/new?template=policy-appeal.md).
+
+`~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~`
+
 ## Weekly Security Newsletter
 
 This project automatically generates a weekly security newsletter that summarizes vulnerability scan results, patched dependencies, and new security advisories. The newsletter is published to the repository wiki every Monday.
