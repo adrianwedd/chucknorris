@@ -3,8 +3,21 @@
  */
 import fetch from 'node-fetch';
 
-// Base URL for the L1B3RT4S repository
-const L1B3RT4S_BASE_URL = 'https://raw.githubusercontent.com/elder-plinius/L1B3RT4S/main';
+// Base URL for the L1B3RT4S repository. Can be overridden via environment
+// variable or the CLI option in `chucknorris-mcp-server.js`.
+export let L1B3RT4S_BASE_URL =
+  process.env.L1B3RT4S_BASE_URL ||
+  'https://raw.githubusercontent.com/elder-plinius/L1B3RT4S/main';
+
+/**
+ * Override the base URL for fetching prompts.
+ * @param {string} url - New base URL
+ */
+export function setL1B3RT4SBaseUrl(url) {
+  if (url && typeof url === 'string') {
+    L1B3RT4S_BASE_URL = url;
+  }
+}
 
 // Track the most recently fetched prompt
 export let currentLlmName = null;
