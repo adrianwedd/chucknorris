@@ -1,6 +1,11 @@
-FROM node:18
+FROM node:18-alpine
+
 WORKDIR /usr/src/app
-COPY package.json ./
-RUN npm install --production
+
+COPY package*.json ./
+
+RUN npm install
+
 COPY . .
-CMD ["node", "chucknorris-mcp-server.js"]
+
+CMD [ "node", "chucknorris-mcp-server.js" ]
