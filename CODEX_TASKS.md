@@ -452,3 +452,97 @@ acceptance_criteria:
   - New contributor names appear within one day of merging a pull request.
   - Weekly newsletters reference top contributors of the week.
 ```
+
+```codex-task
+id: CR-GOD-001
+title: Clone Public Jailbreak Repos
+priority: P1
+phase: R&D
+epic: Prompt Ingestion
+category: Infrastructure
+effort: 3
+owner_hint: Research Miner
+dependencies: []
+steps:
+  - Create a `scripts/clone_and_extract.sh` to clone key public repos into `prompt-lab/repos`.
+  - Store repo URLs in a `jailbreak_sources.txt` manifest for reproducibility.
+  - Use `git clone --depth=1` for lightweight footprint; log clone results for audit.
+acceptance_criteria:
+  - All URLs in the manifest are cloned successfully into `repos/`.
+```
+
+```codex-task
+id: CR-GOD-002
+title: Extract Prompts to Unified Format
+priority: P1
+phase: Architecture Implementation
+epic: Prompt Ingestion
+category: Enhancement
+effort: 5
+owner_hint: Prompt Curator
+dependencies: [CR-GOD-001]
+steps:
+  - Write a `scripts/extract_prompts.py` to recursively search cloned repos for `.txt`, `.md`, or `.json` prompt files.
+  - Normalize contents into YAML or markdown and store in `prompts/raw/`.
+  - Preserve metadata: source repo, original path, line count, detected language.
+acceptance_criteria:
+  - Raw prompt files exist for all cloned repos.
+  - At least 100 prompts parsed into a structured format.
+```
+
+```codex-task
+id: CR-GOD-003
+title: Build Prompt Metadata Index
+priority: P2
+phase: Architecture Implementation
+epic: Prompt Ingestion
+category: Enhancement
+effort: 3
+owner_hint: Prompt Curator
+dependencies: [CR-GOD-002]
+steps:
+  - Generate a JSON index mapping: `{ prompt_id, repo, language, tags, word_count, hash }`.
+  - Store it in `prompts/index.json` and validate it against a schema.
+  - Add utility scripts to query prompts by repo or tag.
+acceptance_criteria:
+  - Index includes 90%+ of ingested prompts.
+  - Querying the index by tag or repo name returns expected results.
+```
+
+```codex-task
+id: CR-GOD-004
+title: Validate Prompt Diversity and Deduplicate
+priority: P2
+phase: Security
+epic: Prompt Ingestion
+category: Research
+effort: 4
+owner_hint: Alignment Guardian
+dependencies: [CR-GOD-003]
+steps:
+  - Analyze prompt corpus for language, intent, and redundancy.
+  - Cluster near-duplicates using Jaccard similarity or token-based heuristics.
+  - Flag prompts with similar semantic structure for review.
+acceptance_criteria:
+  - At least 20% of prompt corpus flagged for review or deduplication.
+  - Deduplication reports saved to `logs/metrics/diversity_audit.json`.
+```
+
+```codex-task
+id: CR-GOD-005
+title: Hash Prompts for Change Detection
+priority: P3
+phase: Ops
+epic: Prompt Ingestion
+category: Infrastructure
+effort: 2
+owner_hint: Security Scout
+dependencies: [CR-GOD-003]
+steps:
+  - For each prompt in `prompts/raw/`, compute a SHA256 hash and append to the metadata index.
+  - Detect tampered prompts during ingestion or after repo update.
+  - Provide a command `npm run verify-prompts` to re-check integrity.
+acceptance_criteria:
+  - Hashes appear in 100% of metadata entries.
+  - Modified prompt triggers verification warning.
+```
